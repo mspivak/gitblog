@@ -1,0 +1,51 @@
+service: gitblog
+frameworkVersion: '2 || 3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: '20201221'
+  environment:
+    DB_HOST: ${ssm:/Gitblog/Prod/Db/Host}
+    DB_PORT: ${ssm:/Gitblog/Prod/Db/Host}
+    DB_USER: ${ssm:/Gitblog/Prod/Db/Host}
+    DB_PASSWORD: ${ssm:/Gitblog/Prod/Db/Host}
+    DB_NAME: ${ssm:/Gitblog/Prod/Db/Host}
+
+
+functions:
+
+  DjangoHandler:
+    handler: wsgi_handler.handler
+    timeout: 29
+    layers:
+      - Ref: PythonRequirementsLambdaLayer
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+  - serverless-domain-manager
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    slim: true
+    layer: true
+    noDeploy:
+      - boto3
+
+  wsgi:
+    app: gitblog.wsgi.application
+    packRequirements: false
+
+  customDomain:
+    domainName: gitblog.link
+    certificateName: gitblog.link
+    createRoute53Record: true
+    apiType: rest
+#    endpointType: 'regional'
+#    securityPolicy: tls_1_2
+#    route53Params:
+#      routingPolicy: latency

@@ -1,0 +1,7 @@
+Django==4.0.6
+aws-psycopg2
+Markdown==3.4.1
+PyGithub==1.55
+python-dotenv
+boto3
+werkzeug
