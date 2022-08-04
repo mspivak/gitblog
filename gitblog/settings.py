@@ -34,6 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     'gitblog.link',
+    'e920-131-100-91-114.sa.ngrok.io'
 ]
 
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gh',
     'users',
+    'blogs',
 ]
 
 MIDDLEWARE = [
