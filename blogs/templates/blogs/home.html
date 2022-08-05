@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ blog.name }}</title>
-</head>
-<body>
+{% extends 'blogs/base.html' %}
+
+{% block content %}
+
+<h1>
+    {{ blog.name }}
+</h1>
 
 {% for post in posts %}
-    <a href="{% url 'blog_post' blog.owner.username blog.slug post.slug %}">{{ post.title }}</a>
+    <a href="{{ post.url }}">{{ post.title }}</a>
 {% empty %}
     Looks like {{ user }} has no posts yet.
 {% endfor %}
 
-</body>
-</html>
+{% endblock %}

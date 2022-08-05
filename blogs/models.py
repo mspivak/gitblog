@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class Blog(models.Model):
@@ -26,4 +27,8 @@ class Post(models.Model):
 
     @property
     def url(self):
-        return f'/{self.blog.owner.username}/{self.blog.slug}/{self.slug}'
+        return reverse('blog_post', args={
+            'username': self.blog.owner.username,
+            'blog_slug': self.blog.slug,
+            'post_slug': self.slug
+        })

@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ blog.name }} | {{ post.title }}</title>
-</head>
-<body>
+{% extends 'blogs/base.html' %}
 
-<nav>
-    <ul>
-        <li>
-            <a href="{% url 'blog_home' username=blog.owner.username blog_slug=blog.slug %}">Home</a>
-        </li>
-    </ul>
-</nav>
+{% block content %}
 
 {{ content|safe }}
 
-</body>
-</html>
+{% endblock %}
