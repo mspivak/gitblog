@@ -32,6 +32,9 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
 
+    @property
+    def url(self):
+        return f'{self.blog.url}/{self.slug}'
 
 class PostManager(models.Manager):
     def get_queryset(self):

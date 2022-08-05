@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{%  extends 'blogs/base.html' %}
 
-</body>
-</html>
+{% block content %}
+
+    <h2>{{ category.name }}</h2>
+
+    {% include 'blogs/partials/post_list.html' with posts=posts %}
+
+{% endblock %}

@@ -2,7 +2,7 @@ import markdown
 from django.shortcuts import render
 
 from users.models import User
-from blogs.models import Blog, Post
+from blogs.models import Blog, Post, Category
 
 
 def blog_home(request, username, blog_slug):
@@ -24,7 +24,17 @@ def blog_home(request, username, blog_slug):
 
 
 def blog_category(request, username, blog_slug, category_slug):
-    pass
+    user = User.objects.get(username=username)
+    blog = Blog.objects.get(owner=user, slug=blog_slug)
+    category = Category.objects.get(blog=blog, slug=category_slug)
+    posts = category.post_set.all()
+
+    return render(request, 'blogs/category.html', context={
+        'user': user,
+        'blog': blog,
+        'posts': posts,
+        'category': category,
+    })
 
 
 def blog_post(request, username, blog_slug, category_slug, post_slug):

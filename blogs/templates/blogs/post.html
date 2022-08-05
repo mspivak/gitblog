@@ -5,8 +5,12 @@
     {{ content|safe }}
 
     <ul>
+        {% if previous_post %}
         <li>Previous: <a href="{{ previous_post.url }}">{{ previous_post.title }}</a></li>
+        {% endif %}
+        {% if next_post %}
         <li>Next: <a href="{{ next_post.url }}">{{ next_post.title }}</a></li>
+        {% endif %}
     </ul>
 
 {% endblock %}
