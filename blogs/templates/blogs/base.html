@@ -8,8 +8,9 @@
 
 <nav>
     <ul>
-    {% for post in posts %}
-        <li><a href="{{ post.link }}">{{ post.title }}</a></li>
+        <li><a href="{{ blog.url }}">Home</a></li>
+    {% for category in categories %}
+        <li><a href="{{ category.url }}">{{ category.name }}</a></li>
     {% endfor %}
     </ul>
 </nav>

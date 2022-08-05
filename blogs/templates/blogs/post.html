@@ -2,6 +2,11 @@
 
 {% block content %}
 
-{{ content|safe }}
+    {{ content|safe }}
+
+    <ul>
+        <li>Previous: <a href="{{ previous_post.url }}">{{ previous_post.title }}</a></li>
+        <li>Next: <a href="{{ next_post.url }}">{{ next_post.title }}</a></li>
+    </ul>
 
 {% endblock %}
