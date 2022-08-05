@@ -8,3 +8,7 @@ class GithubToken(models.Model):
 
     def __str__(self):
         return f'<GithubToken {self.token[:6]}>'
+
+    @classmethod
+    def get_latest_for(cls, user):
+        return cls.objects.filter(user=user).order_by('-created_at').first()

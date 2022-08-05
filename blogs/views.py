@@ -1,3 +1,4 @@
+import markdown
 from django.shortcuts import render
 
 from users.models import User
@@ -12,7 +13,7 @@ def blog_home(request, username, blog_slug):
 
     posts = blog.post_set.all()
 
-    return render(request, 'blogs/blog_home.html', context={'posts': posts, 'user': user})
+    return render(request, 'blogs/home.html', context={'posts': posts, 'user': user, 'blog': blog})
 
 
 def blog_post(request, username, blog_slug, post_slug):
@@ -23,4 +24,6 @@ def blog_post(request, username, blog_slug, post_slug):
 
     post = Post.objects.get(blog=blog, slug=post_slug)
 
-    return render(request, 'blogs/blog_post.html', context={'post': post})
+    content = markdown.markdown(str(post.content_md))
+
+    return render(request, 'blogs/post.html', context={'post': post, 'blog': blog, 'content': content})

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ blog.name }}</title>
 </head>
 <body>
 
 {% for post in posts %}
-    <a href="{{ post.url }}">{{ post.title }}</a>
+    <a href="{% url 'blog_post' blog.owner.username blog.slug post.slug %}">{{ post.title }}</a>
 {% empty %}
     Looks like {{ user }} has no posts yet.
 {% endfor %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ blog.name }} | {{ post.title }}</title>
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li>
+            <a href="{% url 'blog_home' username=blog.owner.username blog_slug=blog.slug %}">Home</a>
+        </li>
+    </ul>
+</nav>
+
+{{ content|safe }}
+
+</body>
+</html>
