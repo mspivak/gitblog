@@ -37,6 +37,9 @@ ALLOWED_HOSTS = [
     'e920-131-100-91-114.sa.ngrok.io'
 ]
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tailwind', 'theme', 'django_browser_reload',
     'gh',
     'users',
     'blogs',
@@ -60,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'gitblog.urls'
@@ -79,6 +84,8 @@ TEMPLATES = [
         },
     },
 ]
+
+TAILWIND_APP_NAME = 'theme'
 
 WSGI_APPLICATION = 'gitblog.wsgi.application'
 

@@ -1,12 +1,14 @@
+{% load tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ blog.name }}w</title>
+    <title>{{ blog.name }}</title>
+    {% tailwind_css %}
 </head>
 <body>
 
-<h1>{{ blog.name }}</h1>
+<h1 class="justify-center">{{ blog.name }}</h1>
 
 <nav>
     <ul>

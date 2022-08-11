@@ -6,11 +6,13 @@ import os
 
 from github import Github
 
+from django.conf import settings
+
 load_dotenv()
 
 repo_name = 'mspivak/my-gitblog'
 
-github = Github('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')
+github = Github(settings.get('SELF_GITHUB_CLIENT_TOKEN'))
 
 for repo in github.get_user().get_repos():
     print(repo.name)
