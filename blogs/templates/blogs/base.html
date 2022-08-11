@@ -1,12 +1,6 @@
-{% load tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ blog.name }}</title>
-    {% tailwind_css %}
-</head>
-<body>
+{% extends 'pages/base.html' %}
+
+{% block body %}
 
 <h1 class="justify-center">{{ blog.name }}</h1>
 
@@ -21,5 +15,4 @@
 
 {% block content %}{% endblock %}
 
-</body>
-</html>
+{% endblock %}

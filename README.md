@@ -1,5 +1,5 @@
 # Gitblog
-A git+markdown, minimalist, highly opinionated blogging platform.
+A minimalist git+markdown blogging platform.
 
 ## Deploy
 

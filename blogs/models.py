@@ -1,5 +1,3 @@
-from typing import Union
-
 from django.db import models
 from django.urls import reverse
 
@@ -13,8 +11,7 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
-    @property
-    def url(self):
+    def get_relative_url(self):
         return f'/{self.owner.username}/{self.slug}'
 
 
@@ -32,9 +29,13 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
 
-    @property
-    def url(self):
-        return f'{self.blog.url}/{self.slug}'
+    def get_relative_url(self):
+        return reverse('blog_category', kwargs={
+            'username': self.blog.owner.username,
+            'blog_slug': self.blog.slug,
+            'category_slug': self.slug,
+        })
+
 
 class PostManager(models.Manager):
     def get_queryset(self):
@@ -66,9 +67,8 @@ class Post(models.Model):
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
     category = models.ForeignKey('blogs.Category', on_delete=models.SET_NULL, null=True)
 
-    @property
-    def url(self):
-        return reverse('post', kwargs={
+    def get_relative_url(self):
+        return reverse('blog_post', kwargs={
             'username': self.blog.owner.username,
             'blog_slug': self.blog.slug,
             'category_slug': self.category.slug,

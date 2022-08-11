@@ -1,12 +1,15 @@
 import os
+from slugify import slugify
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from github import Github, UnknownObjectException
 
+from .forms import NewBlogForm
 from blogs.models import Blog, Post
 
 github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
@@ -18,11 +21,27 @@ def get_github_login_url():
     return github_app.get_login_url() + '&scope=repo user:email'
 
 
-def home(request):
+def github_login(request):
+    return redirect(get_github_login_url())
 
-    print(os.getenv('GITHUB_CLIENT_ID'))
 
-    return render(request, 'gh/home.html', context={'login_url': get_github_login_url()})
+@login_required(login_url='home')
+def new(request):
+
+    if request.POST:
+        form = NewBlogForm(request.POST)
+        if form.is_valid():
+            blog = Blog(
+                owner=request.user,
+                slug=slugify(form.cleaned_data['name']),
+                name=form.cleaned_data['name'],
+            )
+            blog.save()
+            return redirect(blog.url)
+    else:
+        form = NewBlogForm()
+
+    return render(request, 'gh/new.html', context={'form': form})
 
 
 def callback(request):
@@ -32,9 +51,7 @@ def callback(request):
     login_url = get_github_login_url()
 
     if not code:
-        return {
-            'login_url': login_url
-        }
+        redirect()
 
     print(f'Got code {code}')
 
@@ -60,55 +77,13 @@ def callback(request):
         )
         user.save()
 
-    token = user.githubtoken_set.create(
+    user.githubtoken_set.create(
         token=token.token
     )
 
-    repo_name = 'my-gitblog'
-
-    try:
-        repo = github_user.get_repo(repo_name)
-    except UnknownObjectException as e:
-        repo = github_user.create_repo(
-            repo_name,
-            homepage=f'https://{request.get_host}/{user.username}/{repo_name}',
-            private=True,
-            auto_init=False,
-            has_issues=False,
-            has_projects=False,
-            has_wiki=False,
-            has_downloads=False,
-        )
-        print('Created repo', repo)
-        repo.create_file(
-            path='README.md',
-            message='Initial commit',
-            content=f'# Welcome to Gitblog. Gitblog publishes your markdown files as blog posts nice and easy.'
-        )
-
-        blog = Blog(
-            owner=user,
-            slug=repo_name,
-            name=' '.join(repo_name.split('-')).title(),
-        )
-        blog.save()
-
-    hook_url = f'https://{request.get_host()}/github/hook/{user.username}/{repo_name}'
-
-    existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == hook_url), None)
-
-    if not existing_hook:
-        hook = repo.create_hook(
-            name='web',
-            config={'url': hook_url},
-            active=True,
-            events=['push']
-        )
-        print('Created hook', hook)
-
     login(request, user)
 
-    return HttpResponseRedirect(redirect_to=f'/{user.username}/{repo_name}')
+    return redirect('new')
 
 
 def hook(request):
