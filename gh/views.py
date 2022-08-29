@@ -1,4 +1,3 @@
-import os
 from slugify import slugify
 
 from django.conf import settings
@@ -7,10 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from github import Github, UnknownObjectException
+from github import Github
 
 from .forms import NewBlogForm
-from blogs.models import Blog, Post
+from blogs.models import Blog
 
 github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
 
@@ -36,8 +35,9 @@ def new(request):
                 slug=slugify(form.cleaned_data['name']),
                 name=form.cleaned_data['name'],
             )
+            blog.create_on_source()
             blog.save()
-            return redirect(blog.url)
+            return redirect(blog.get_absolute_url())
     else:
         form = NewBlogForm()
 
@@ -83,7 +83,7 @@ def callback(request):
 
     login(request, user)
 
-    return redirect('new')
+    return redirect('github_new')
 
 
 def hook(request):
