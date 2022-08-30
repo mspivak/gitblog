@@ -2,15 +2,19 @@
 
 {% block content %}
 
-    {{ content|safe }}
+    <article class="container mx-auto prose xl:prose-xl dark:prose-invert font-serif ">
+        {{ content|safe }}
 
-    <ul>
-        {% if previous_post %}
-        <li>Previous: <a href="{{ previous_post.url }}">{{ previous_post.title }}</a></li>
-        {% endif %}
-        {% if next_post %}
-        <li>Next: <a href="{{ next_post.url }}">{{ next_post.title }}</a></li>
-        {% endif %}
-    </ul>
+        <hr>
+
+        <ul>
+            {% if previous_post %}
+            <li>Previous: <a href="{{ previous_post.get_absolute_url }}">{{ previous_post.title }}</a></li>
+            {% endif %}
+            {% if next_post %}
+            <li>Next: <a href="{{ next_post.get_absolute_url }}">{{ next_post.title }}</a></li>
+            {% endif %}
+        </ul>
+    </article>
 
 {% endblock %}

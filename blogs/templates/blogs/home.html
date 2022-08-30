@@ -2,10 +2,15 @@
 
 {% block content %}
 
-{% include 'blogs/partials/post_list.html' with posts=posts %}
 
-{% if not posts %}
-    Looks like {{ user }} has no posts yet.
-{% endif %}
+    <article class="prose dark:prose-invert mx-auto">
+
+        {% include 'blogs/partials/post_list.html' with posts=posts %}
+
+        {% if not posts %}
+            Looks like {{ user }} has no posts yet.
+        {% endif %}
+    
+    </article>
 
 {% endblock %}

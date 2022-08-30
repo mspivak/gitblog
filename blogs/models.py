@@ -15,7 +15,7 @@ class Blog(models.Model):
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
     def get_absolute_url(self):
-        return f'/{self.owner.username}/{self.slug}'
+        return reverse('blog_home', kwargs={'username': self.owner.username, 'blog_slug': self.slug})
 
 
     @property

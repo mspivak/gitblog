@@ -26,13 +26,14 @@ class Command(BaseCommand):
 
         repo = github.get_user().get_repo(blog.slug)
 
-        for file in repo.get_contents(
-            '/',
-        ):
+        for file in repo.get_contents('/'):
             if file.type == 'dir':
                 continue
 
             if file.name.endswith('.md'):
+
+                print(f'Working on {file}')
+
                 slug = file.name.lower()[:-3]
                 post = Post.objects.get_or_create(blog=blog, slug=slug)[0]
                 post.title = slug.replace('-', ' ').title()

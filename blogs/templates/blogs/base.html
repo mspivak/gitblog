@@ -2,16 +2,14 @@
 
 {% block body %}
 
-<h1 class="justify-center">{{ blog.name }}</h1>
-
-<nav>
-    <ul>
-        <li><a href="{{ blog.url }}">Home</a></li>
-    {% for category in categories %}
-        <li><a href="{{ category.url }}">{{ category.name }}</a></li>
-    {% endfor %}
-    </ul>
-</nav>
+    <nav class="mb-20 p-5 border-gray-500 bg-gray-600/25 flex items-center">
+        <a class="dark:text-white text-2xl" href="{{ blog.get_absolute_url }}">{{ blog.name }}</a>
+        <ul class="grow flex justify-end">
+            {% for category in categories %}
+                <li class="mx-5"><a href="{{ category.get_absolute_url }}" class="dark:text-gray-200">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
 
 {% block content %}{% endblock %}
 

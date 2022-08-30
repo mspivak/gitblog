@@ -26,6 +26,7 @@ def blog_home(request, username, blog_slug):
 def blog_category(request, username, blog_slug, category_slug):
     user = User.objects.get(username=username)
     blog = Blog.objects.get(owner=user, slug=blog_slug)
+    categories = blog.category_set.all()
     category = Category.objects.get(blog=blog, slug=category_slug)
     posts = category.post_set.all()
 
@@ -34,6 +35,7 @@ def blog_category(request, username, blog_slug, category_slug):
         'blog': blog,
         'posts': posts,
         'category': category,
+        'categories': categories,
     })
 
 

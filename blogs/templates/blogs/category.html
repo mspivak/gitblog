@@ -2,8 +2,12 @@
 
 {% block content %}
 
-    <h2>{{ category.name }}</h2>
+    <article class="prose dark:prose-invert mx-auto">
 
-    {% include 'blogs/partials/post_list.html' with posts=posts %}
+        <h1 class="text-xl">{{ category.name }}</h1>
+
+        {% include 'blogs/partials/post_list.html' with posts=posts %}
+
+    </article>
 
 {% endblock %}
