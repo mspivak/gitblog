@@ -39,6 +39,10 @@ def new(request):
             )
             blog.create_on_source()
             blog.save()
+            blog.category_set.create(
+                name='Posts', slug='posts'
+            )
+
             return redirect(blog.get_absolute_url())
     else:
         form = NewBlogForm()
@@ -105,18 +109,10 @@ def hook(request, username, repo_slug):
                for file in files if file.endswith('.md')}
 
     for file in changes:
-        print(f'Working on {file}')
-        slug = file.split('/')[-1].lower()[:-3]
-        post = Post.objects.get_or_create(blog=blog, slug=slug)[0]
-        post.filepath = file
-        post.title = post.slug.replace('-', ' ').title()
+        blog.create_or_update_from_file(
+            file=file,
+            content=repo.get_contents(file).decoded_content.decode('utf-8')
+        )
 
-        content = repo.get_contents(file)
-
-        print(content)
-
-
-        post.content_md = content.decoded_content.decode('utf-8')
-        post.save()
 
     return HttpResponse(status=204)

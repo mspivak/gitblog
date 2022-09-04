@@ -57,22 +57,30 @@ class Blog(models.Model):
             )
             print('Created hook', hook)
 
-    def update_from_source(self):
-        pass
-    # s3 = boto3.client('s3')
-    #
-    # files = github.get_repo(self.name).get_contents('/')
-    #
-    # for file in files:
-    #     if file.name.endswith('.md'):
-    #
-    #     md = base64.b64decode(file.content).decode('utf-8')
-    #
-    #     filename = file.name.removesuffix('.md')
-    #
-    #     s3.put_object(Body=rendered_html,
-    #                   Bucket='gitblog-html',
-    #                   Key= f'{repo_name}/{filename}.html')
+    def create_or_update_from_file(self, filepath, content):
+        print(f'Working on {filepath}')
+        slug = filepath.split('/')[-1].lower()[:-3]
+        post = Post.objects.get_or_create(blog=self, slug=slug)[0]
+        post.category = self.get_or_create_category_from_filepath(filepath)
+
+        # post.published = filepath.startswith('public/')
+
+        post.filepath = filepath
+        post.title = post.slug.replace('-', ' ').title()
+        post.content_md = content
+        post.save()
+        return post
+
+    def get_or_create_category_from_filepath(self, filepath):
+        parts = filepath.split('/')
+
+        if len(parts) == 3 and parts[0] == 'public':
+            category_slug = parts[1]
+            category = self.category_set.get_or_create(slug=category_slug)
+        else:
+            category = self.category_set.order_by('created_at').first
+
+        return category
 
 
 class CategoryManager(models.Manager):
