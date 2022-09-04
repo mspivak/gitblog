@@ -6,13 +6,9 @@ from blogs.models import Blog, Post, Category
 
 
 def blog_home(request, username, blog_slug):
-
     user = User.objects.get(username=username)
-
     blog = Blog.objects.get(owner=user, slug=blog_slug)
-
     categories = blog.category_set.all()
-
     posts = blog.post_set.all()
 
     return render(request, 'blogs/home.html', context={
@@ -40,13 +36,9 @@ def blog_category(request, username, blog_slug, category_slug):
 
 
 def blog_post(request, username, blog_slug, category_slug, post_slug):
-
     user = User.objects.get(username=username)
-
     blog = Blog.objects.get(owner=user, slug=blog_slug)
-
     post = Post.objects.get(blog=blog, slug=post_slug)
-
     categories = blog.category_set.all()
 
     content = markdown.markdown(str(post.content_md))

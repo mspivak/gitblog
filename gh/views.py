@@ -1,15 +1,18 @@
+import json
 from slugify import slugify
 
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 from github import Github
 
 from .forms import NewBlogForm
-from blogs.models import Blog
+from blogs.models import Blog, Post
+from gh.models import GithubToken
 
 github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
 
@@ -26,7 +29,6 @@ def github_login(request):
 
 @login_required(login_url='home')
 def new(request):
-
     if request.POST:
         form = NewBlogForm(request.POST)
         if form.is_valid():
@@ -45,7 +47,6 @@ def new(request):
 
 
 def callback(request):
-
     code = request.GET.get('code')
 
     login_url = get_github_login_url()
@@ -86,5 +87,36 @@ def callback(request):
     return redirect('github_new')
 
 
-def hook(request):
-    print('INCOMING REQUEST', request)
+@csrf_exempt
+def hook(request, username, repo_slug):
+    payload = json.loads(request.POST['payload'])
+
+    user = User.objects.filter(username=username).first()
+    blog = Blog.objects.filter(owner=user, slug=repo_slug).first()
+
+    github = Github(
+        GithubToken.get_latest_for(user=user).token
+    )
+
+    repo = github.get_user().get_repo(blog.slug)
+
+    changes = {file
+               for files in [commit['added'] + commit['modified'] for commit in payload['commits']]
+               for file in files if file.endswith('.md')}
+
+    for file in changes:
+        print(f'Working on {file}')
+        slug = file.split('/')[-1].lower()[:-3]
+        post = Post.objects.get_or_create(blog=blog, slug=slug)[0]
+        post.filepath = file
+        post.title = post.slug.replace('-', ' ').title()
+
+        content = repo.get_contents(file)
+
+        print(content)
+
+
+        post.content_md = content.decoded_content.decode('utf-8')
+        post.save()
+
+    return HttpResponse(status=204)

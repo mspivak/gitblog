@@ -36,12 +36,12 @@ DOMAIN = 'github.link'
 ALLOWED_HOSTS = [
     'localhost',
     'gitblog.link',
-    'd4e4-186-72-177-170.ngrok.io'
+    'e4cf-190-214-37-193.ngrok.io'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
-    'https://d4e4-186-72-177-170.ngrok.io',
+    'https://e4cf-190-214-37-193.ngrok.io',
 ]
 
 INTERNAL_IPS = [

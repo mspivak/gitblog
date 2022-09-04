@@ -121,6 +121,7 @@ class Post(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.SlugField(max_length=255, unique=True)
     title = models.CharField(max_length=255)
+    filepath = models.CharField(max_length=255)
     content_md = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
