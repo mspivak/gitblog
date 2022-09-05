@@ -1,4 +1,5 @@
 import markdown
+import misaka
 from django.shortcuts import render
 
 from users.models import User
@@ -41,7 +42,9 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
     post = Post.objects.get(blog=blog, slug=post_slug)
     categories = blog.category_set.all()
 
-    content = markdown.markdown(str(post.content_md))
+    content = misaka.html(str(post.content_md))
+
+    # //content = markdown.markdown(str(post.content_md))
 
     return render(request, 'blogs/post.html', context={
         'post': post,

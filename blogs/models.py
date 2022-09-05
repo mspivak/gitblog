@@ -63,10 +63,11 @@ class Blog(models.Model):
         repo = github_user.get_repo(self.slug)
         for file in repo.get_contents('/'):
             print(file)
-            self.create_or_update_from_file(
-                filepath=file.name,
-                content=file.decoded_content.decode('utf-8')
-            )
+            if file.name.endswith('.md'):
+                self.create_or_update_from_file(
+                    filepath=file.name,
+                    content=file.decoded_content.decode('utf-8')
+                )
 
     def create_or_update_from_file(self, filepath, content):
         print(f'Working on {filepath}')
