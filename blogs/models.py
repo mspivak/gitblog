@@ -17,7 +17,6 @@ class Blog(models.Model):
     def get_absolute_url(self):
         return reverse('blog_home', kwargs={'username': self.owner.username, 'blog_slug': self.slug})
 
-
     @property
     def hook_url(self):
         path = reverse('github_hook', kwargs={'username': self.owner.username, 'repo_slug': self.slug})
@@ -29,10 +28,10 @@ class Blog(models.Model):
 
         try:
             repo = github_user.get_repo(self.name)
-        except UnknownObjectException as e:
+        except UnknownObjectException:
             repo = github_user.create_repo(
                 self.slug,
-                homepage=f'https://{settings.DOMAIN}/{self.get_absolute_url()}',
+                homepage=f'https://{settings.DOMAIN}{self.get_absolute_url()}',
                 private=True,
                 auto_init=False,
                 has_issues=False,
@@ -56,6 +55,18 @@ class Blog(models.Model):
                 events=['push']
             )
             print('Created hook', hook)
+        else:
+            self.sync()
+
+    def sync(self):
+        github_user = self.owner.get_github_user()
+        repo = github_user.get_repo(self.slug)
+        for file in repo.get_contents('/'):
+            print(file)
+            self.create_or_update_from_file(
+                filepath=file.name,
+                content=file.decoded_content.decode('utf-8')
+            )
 
     def create_or_update_from_file(self, filepath, content):
         print(f'Working on {filepath}')
@@ -75,10 +86,16 @@ class Blog(models.Model):
         parts = filepath.split('/')
 
         if len(parts) == 3 and parts[0] == 'public':
+            print(parts)
             category_slug = parts[1]
-            category = self.category_set.get_or_create(slug=category_slug)
+            category = self.category_set.get_or_create(
+                slug=category_slug,
+                defaults={'name': category_slug.title()}
+            )
         else:
-            category = self.category_set.order_by('created_at').first
+            category = self.category_set.first()
+
+        print('returning category:', category)
 
         return category
 
@@ -143,6 +160,3 @@ class Post(models.Model):
             'category_slug': self.category.slug,
             'post_slug': self.slug
         })
-
-    def __repr__(self):
-        return '<blog>'

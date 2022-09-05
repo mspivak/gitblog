@@ -2,15 +2,27 @@
 
 {% block content %}
 
-    <p>
-        Hey there! Enter a name for your blog. We'll create a repo for it on your Github account.
-    </p>
+    <article class="container mx-auto dark:text-gray-200">
+        <form action="#" method="post">
+            <p class="my-4">
+                Hey there! Enter a name for your blog. We'll create a repo with this name on your Github account.
+                <br><small>You can also use the name of an existing repo.</small>
+            </p>
 
-    <form action="#" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Submit">
-    </form>
+            {% csrf_token %}
+            {{ form }}
+
+            <div class="block">
+                <input type="submit" value="Start!" class="my-6 text-white bg-teal-600 rounded-full py-5 px-10">
+            </div>
+
+        </form>
+
+    </article>
+
+
+
+
 
 
 {% endblock %}

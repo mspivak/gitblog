@@ -11,8 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from github import Github
 
 from .forms import NewBlogForm
-from blogs.models import Blog, Post
-from gh.models import GithubToken
+from blogs.models import Blog
 
 github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
 
@@ -32,22 +31,25 @@ def new(request):
     if request.POST:
         form = NewBlogForm(request.POST)
         if form.is_valid():
-            blog = Blog(
+            blog_name = form.cleaned_data['name']
+            blog = Blog.objects.create(
                 owner=request.user,
-                slug=slugify(form.cleaned_data['name']),
-                name=form.cleaned_data['name'],
+                name=blog_name,
+                slug=blog_name
             )
-            blog.create_on_source()
-            blog.save()
             blog.category_set.create(
                 name='Posts', slug='posts'
             )
-
+            blog.create_on_source()
+            blog.save()
             return redirect(blog.get_absolute_url())
     else:
         form = NewBlogForm()
+        repos = request.user.get_github_user().get_repos()
 
-    return render(request, 'gh/new.html', context={'form': form})
+        print([repo.full_name for repo in repos])
+
+        return render(request, 'gh/new.html', context={'form': form, 'repos': repos})
 
 
 def callback(request):
@@ -98,11 +100,7 @@ def hook(request, username, repo_slug):
     user = User.objects.filter(username=username).first()
     blog = Blog.objects.filter(owner=user, slug=repo_slug).first()
 
-    github = Github(
-        GithubToken.get_latest_for(user=user).token
-    )
-
-    repo = github.get_user().get_repo(blog.slug)
+    repo = user.get_github_user().get_repo(blog.slug)
 
     changes = {file
                for files in [commit['added'] + commit['modified'] for commit in payload['commits']]
@@ -113,6 +111,5 @@ def hook(request, username, repo_slug):
             file=file,
             content=repo.get_contents(file).decoded_content.decode('utf-8')
         )
-
 
     return HttpResponse(status=204)

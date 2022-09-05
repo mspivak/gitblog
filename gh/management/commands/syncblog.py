@@ -20,24 +20,6 @@ class Command(BaseCommand):
 
         blog = Blog.objects.get(owner=user, slug=options['blog_slug'])
 
-        github = Github(
-            GithubToken.get_latest_for(user=user).token
-        )
-
-        repo = github.get_user().get_repo(blog.slug)
-
-        for file in repo.get_contents('/'):
-            if file.type == 'dir':
-                continue
-
-            if file.name.endswith('.md'):
-
-                print(f'Working on {file}')
-
-                slug = file.name.lower()[:-3]
-                post = Post.objects.get_or_create(blog=blog, slug=slug)[0]
-                post.title = slug.replace('-', ' ').title()
-                post.content_md = file.decoded_content.decode('utf-8')
-                post.save()
+        blog.sync()
 
 

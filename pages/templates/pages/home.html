@@ -2,8 +2,13 @@
 
 {% block body %}
 
-    <h1>Git. Markdown. <br>Blog.</h1>
 
-    <a href="{% url 'github_login' %}">Login with Github</a>
+
+    <section class="container mt-10 mx-auto prose dark:prose-invert">
+        <h1>Git. Markdown. <br>Blog.</h1>
+
+        <a href="{% url 'github_login' %}" class="inline-block my-8 border rounded-full no-underline hover:bg-gray-900 py-5 px-10">Login with Github</a>
+    </section>
+
 
 {% endblock %}
