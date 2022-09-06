@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -25,7 +27,7 @@ class Blog(models.Model):
     @property
     def hook_url(self):
         path = reverse('github_hook', kwargs={'username': self.owner.username, 'repo_slug': self.slug})
-        return f'https://{settings.DOMAIN}/{path}'
+        return f'https://{settings.DOMAIN}{path}'
 
     def create_on_source(self):
 
@@ -73,12 +75,15 @@ class Blog(models.Model):
     def sync(self):
         github_user = self.owner.get_github_user()
         repo = github_user.get_repo(self.slug)
-        for file in repo.get_contents('/'):
-            print(file)
-            if file.name.endswith('.md'):
+
+        for element in repo.get_git_tree(sha=repo.get_branch('master').commit.sha, recursive=True).tree:
+            if element.type != 'blob':
+                continue
+            filepath = element.path
+            if filepath.endswith('.md'):
                 self.create_or_update_from_file(
-                    filepath=file.name,
-                    content=file.decoded_content.decode('utf-8')
+                    filepath=filepath,
+                    content=repo.get_contents(filepath).decoded_content.decode('utf-8')
                 )
 
     def create_or_update_from_file(self, filepath, content):
@@ -86,20 +91,19 @@ class Blog(models.Model):
         slug = filepath.split('/')[-1].lower()[:-3]
         post = Post.objects.get_or_create(blog=self, slug=slug)[0]
         post.category = self.get_or_create_category_from_filepath(filepath)
-
-        # post.published = filepath.startswith('public/')
-
+        post.published_at = datetime.now() if filepath.startswith('public/') else None
+        print(f'Published at {post.published_at}')
         post.filepath = filepath
         post.title = post.slug.replace('-', ' ').title()
         post.content_md = content
         post.save()
+        print(f'Published at {post.published_at}')
         return post
 
     def get_or_create_category_from_filepath(self, filepath):
         parts = filepath.split('/')
 
         if len(parts) == 3 and parts[0] == 'public':
-            print(parts)
             category_slug = parts[1]
             category = self.category_set.get_or_create(
                 slug=category_slug,
@@ -107,8 +111,6 @@ class Blog(models.Model):
             )
         else:
             category = self.category_set.first()
-
-        print('returning category:', category)
 
         return category
 
@@ -166,6 +168,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     filepath = models.CharField(max_length=255)
     content_md = models.TextField()
+    published_at = models.DateTimeField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)

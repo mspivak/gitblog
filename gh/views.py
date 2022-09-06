@@ -113,4 +113,6 @@ def hook(request, username, repo_slug):
             content=repo.get_contents(filepath).decoded_content.decode('utf-8')
         )
 
+    # TODO: Implement 'removed'
+
     return HttpResponse(status=204)
