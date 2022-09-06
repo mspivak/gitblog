@@ -19,10 +19,10 @@ Gitblog publishes your markdown files as blog posts nice and easy.
     $ git push
     ```
     
-    At this point, your post is visible only to you on https://gitblog.link/{owner}/{repo_slug}/hello-world
+    At this point, your post is visible only to you on `https://gitblog.link/{owner}/{repo_slug}/hello-world`.
 
 
-3. Publish it
+4. Publish it
 
     ```console
     $ mv hello-world.md public/hello-world.md
