@@ -1,2 +1,21 @@
 {% extends 'blogs/base.html' %}
 
+{% block content %}
+
+    <h1 class="p-10 text-3xl text-teal-100">My Blogs</h1>
+
+    <div class="grid grid-cols-4 gap-4 p-10">
+        {% for blog in blogs %}
+        <a href="{% url 'blog_home' username=blog.owner.username blog_slug=blog.slug %}"
+                class="border p-5 rounded-xl dark:text-gray-100 dark:border-gray-200 hover:bg-teal-500/20 cursor-pointer">
+            <div class="text-bold">{{ blog.name }}</div>
+            <div class="text-teal-500">
+                <code>{{ blog.owner.username }}/{{ blog.slug }}</code>
+            </div>
+            <div>
+                {{ blog.post_set.count }} posts.
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+{% endblock %}

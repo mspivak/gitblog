@@ -52,3 +52,9 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
         'next_post': Post.objects.next(post),
         'previous_post': Post.objects.previous(post),
     })
+
+def admin_blogs(request):
+
+    return render(request, 'blogs/admin_blogs.html', context={
+        'blogs': request.user.blog_set.all()
+    })
