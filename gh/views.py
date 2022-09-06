@@ -42,7 +42,7 @@ def new(request):
             )
             blog.create_on_source()
             blog.save()
-            return redirect(blog.get_absolute_url())
+            return redirect(blog.post_set.first().get_absolute_url())
     else:
         form = NewBlogForm()
         repos = request.user.get_github_user().get_repos()
@@ -95,7 +95,8 @@ def callback(request):
 
 @csrf_exempt
 def hook(request, username, repo_slug):
-    payload = json.loads(request.POST['payload'])
+
+    payload = json.loads(request.body)
 
     user = User.objects.filter(username=username).first()
     blog = Blog.objects.filter(owner=user, slug=repo_slug).first()
@@ -106,10 +107,10 @@ def hook(request, username, repo_slug):
                for files in [commit['added'] + commit['modified'] for commit in payload['commits']]
                for file in files if file.endswith('.md')}
 
-    for file in changes:
+    for filepath in changes:
         blog.create_or_update_from_file(
-            file=file,
-            content=repo.get_contents(file).decoded_content.decode('utf-8')
+            filepath=filepath,
+            content=repo.get_contents(filepath).decoded_content.decode('utf-8')
         )
 
     return HttpResponse(status=204)

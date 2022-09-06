@@ -2,7 +2,10 @@
 
 {% block content %}
 
+    <style>{{ content_css }}</style>
+
     <article class="container mx-auto prose xl:prose-xl dark:prose-invert font-serif">
+
         {{ content|safe }}
 
         <hr>

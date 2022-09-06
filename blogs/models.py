@@ -14,6 +14,11 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['owner', 'slug'], name='unique_owner_slug'),
+        ]
+
     def get_absolute_url(self):
         return reverse('blog_home', kwargs={'username': self.owner.username, 'blog_slug': self.slug})
 
@@ -39,24 +44,31 @@ class Blog(models.Model):
                 has_wiki=False,
                 has_downloads=False,
             )
-            print('Created repo', repo)
+
+            with open('blogs/default_post.md', 'r') as file:
+                first_post_md = file.read()
+
             repo.create_file(
                 path='README.md',
                 message='Initial commit',
-                content=f'# Welcome to Gitblog. Gitblog publishes your markdown files as blog posts nice and easy.'
+                content=first_post_md.format(owner=self.owner.username, repo_slug=self.slug)
             )
 
         existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == self.hook_url), None)
         if not existing_hook:
             hook = repo.create_hook(
                 name='web',
-                config={'url': self.hook_url},
+                config={
+                    'url': self.hook_url,
+                    'content_type': 'json'
+                    # 'secret': TODO: generate secret and store it on the blog table
+                },
                 active=True,
                 events=['push']
             )
             print('Created hook', hook)
-        else:
-            self.sync()
+
+        self.sync()
 
     def sync(self):
         github_user = self.owner.get_github_user()
@@ -109,11 +121,16 @@ class CategoryManager(models.Manager):
 class Category(models.Model):
     objects = CategoryManager
     id = models.AutoField(primary_key=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255)
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['blog', 'slug'], name='unique_blog_category_slug'),
+        ]
 
     def get_absolute_url(self):
         return reverse('blog_category', kwargs={
@@ -129,14 +146,14 @@ class PostManager(models.Manager):
 
     def previous(self, post: 'Post'):
         return self.get_queryset()\
-            .filter(blog__owner=post.blog.owner)\
+            .filter(blog=post.blog)\
             .filter(id__lt=post.id)\
             .order_by('-id')\
             .first()
 
     def next(self, post: 'Post'):
         return self.get_queryset()\
-            .filter(blog__owner=post.blog.owner)\
+            .filter(blog=post.blog)\
             .filter(id__gt=post.id)\
             .order_by('id')\
             .first()
@@ -145,7 +162,7 @@ class PostManager(models.Manager):
 class Post(models.Model):
     objects = PostManager()
     id = models.AutoField(primary_key=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255)
     title = models.CharField(max_length=255)
     filepath = models.CharField(max_length=255)
     content_md = models.TextField()
@@ -154,6 +171,11 @@ class Post(models.Model):
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
     category = models.ForeignKey('blogs.Category', on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['blog', 'slug'], name='unique_blog_post_slug'),
+        ]
+
     def get_absolute_url(self):
         return reverse('blog_post', kwargs={
             'username': self.blog.owner.username,
@@ -161,3 +183,4 @@ class Post(models.Model):
             'category_slug': self.category.slug,
             'post_slug': self.slug
         })
+

@@ -1,7 +1,6 @@
-import markdown
-import misaka
 from django.shortcuts import render
 
+from .markdown import md_to_html_and_css
 from users.models import User
 from blogs.models import Blog, Post, Category
 
@@ -42,15 +41,14 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
     post = Post.objects.get(blog=blog, slug=post_slug)
     categories = blog.category_set.all()
 
-    content = misaka.html(str(post.content_md))
-
-    # //content = markdown.markdown(str(post.content_md))
+    html, css = md_to_html_and_css(str(post.content_md))
 
     return render(request, 'blogs/post.html', context={
         'post': post,
         'blog': blog,
         'categories': categories,
-        'content': content,
+        'content': html,
+        'content_css': css,
         'next_post': Post.objects.next(post),
         'previous_post': Post.objects.previous(post),
     })
