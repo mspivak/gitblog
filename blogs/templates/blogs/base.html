@@ -12,6 +12,7 @@
         </nav>
     {% endif %}
 
+    {% if blog %}
     <nav class="p-5 border-gray-500 bg-gray-600/25 flex items-center">
         <a class="dark:text-white text-2xl" href="{{ blog.get_absolute_url }}">{{ blog.name }}</a>
         <ul class="grow flex justify-end">
@@ -20,6 +21,7 @@
             {% endfor %}
         </ul>
     </nav>
+    {% endif %}
 
 {% block content %}{% endblock %}
 
