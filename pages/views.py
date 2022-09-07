@@ -10,7 +10,7 @@ from pygments.lexers import get_lexer_by_name
 def home(request):
 
     git_code = '''
-$ git clone git@github.com:your-github-account/my-gitblog.git
+$ git clone git@github.com:your-github-username/your-gitblog.git
 $ echo '# My first Gitblog post' > public/hello-world.md
 $ git add public/hello-world.md
 $ git commit -m 'my first post'

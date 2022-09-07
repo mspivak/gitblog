@@ -5,7 +5,15 @@
     <section class="container mt-10 mx-auto prose dark:prose-invert">
         <h1>Git + Markdown Blogging</h1>
 
-        <style>{{ git_code_styles }}</style>
+        <style>
+            {{ git_code_styles }}
+            pre .gp {
+              user-select: none;
+              -webkit-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+            }
+        </style>
 
         {{ git_code_html | safe }}
 
