@@ -19,7 +19,7 @@ class HighlighterRenderer(misaka.HtmlRenderer):
         if lexer:
             formatter = HtmlFormatter()
             return highlight(text, lexer, formatter)
-        # default
+
         return '\n<pre><code>{}</code></pre>\n'.format(houdini.escape_html(text.strip()))
 
 
