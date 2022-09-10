@@ -15,7 +15,7 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
             {% for blog in blogs %}
             <a href="{% url 'blog_home' username=blog.owner.username blog_slug=blog.slug %}"
                     class="border p-5 rounded-xl dark:text-gray-100 dark:border-gray-200/25 hover:bg-teal-500/10 cursor-pointer">
@@ -23,8 +23,8 @@
                 <div class="text-teal-500">
                     <code>{{ blog.owner.username }}/{{ blog.slug }}</code>
                 </div>
-                <div>
-                    {{ blog.post_set.count }} posts.
+                <div class="text-gray-400">
+                    <small>{{ blog.post_set.count }} post{{ blog.post_set.count | pluralize:'s' }}</small>
                 </div>
             </a>
             {% endfor %}

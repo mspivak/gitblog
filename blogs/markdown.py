@@ -27,7 +27,8 @@ def md_to_html_and_css(content_md: str) -> Tuple[str, str]:
 
     renderer = HighlighterRenderer()
 
-    to_html = misaka.Markdown(renderer, extensions=('fenced-code',))
+    to_html = misaka.Markdown(renderer, extensions=('tables', 'fenced-code', 'footnotes', 'autolink', 'strikethrough',
+                                                    'underline', 'highlight', 'quote', 'superscript',
+                                                    'math', 'math-explicit', ))
 
     return to_html(str(content_md)), HtmlFormatter(style='solarized-dark').get_style_defs('.highlight')
-
