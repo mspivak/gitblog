@@ -28,10 +28,6 @@ Gitblog publishes your markdown files as blog posts nice and easy.
 
    superscript ( x^2 )
 
-   $$ x = a_0 + \frac{1}{\displaystyle a_1 + \frac{1}{\displaystyle a_2 + \frac{1}{\displaystyle a_3 + a_4}}} $$
-
-   ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}{\color{Blue}}) 
-
    ![title](sealion.png "See Lion!")
 
    [^1]: Footnotes work!
