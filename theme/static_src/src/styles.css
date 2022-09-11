@@ -2,3 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind typography;
+
+
+@layer components {
+    form label {
+        @apply block mb-2
+    }
+    input[type="text"] {
+        @apply dark:bg-transparent rounded-xl border border-teal-500 dark:text-gray-100
+    }
+}
+
+

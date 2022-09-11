@@ -35,7 +35,7 @@ def new(request):
             blog = Blog.objects.create(
                 owner=request.user,
                 name=blog_name,
-                slug=blog_name
+                slug=slugify(blog_name)
             )
             blog.category_set.create(
                 name='Posts', slug='posts'
