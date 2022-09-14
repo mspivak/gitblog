@@ -41,10 +41,7 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
     post = Post.objects.get(blog=blog, slug=post_slug)
     categories = blog.category_set.all()
 
-    with open('blogs/default_post.md', 'r') as file:
-        first_post_md = file.read()
-
-    html, css = md_to_html_and_css(first_post_md)
+    html, css = md_to_html_and_css(post)
 
     return render(request, 'blogs/post.html', context={
         'post': post,

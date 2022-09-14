@@ -1,10 +1,14 @@
 from datetime import datetime
 
+import misaka
+import uuid
+from github import UnknownObjectException
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-from github import UnknownObjectException
+from .markdown import SyncRenderer
 
 
 class Blog(models.Model):
@@ -73,8 +77,7 @@ class Blog(models.Model):
         self.sync()
 
     def sync(self):
-        github_user = self.owner.get_github_user()
-        repo = github_user.get_repo(self.slug)
+        repo = self.get_github_repo()
 
         for element in repo.get_git_tree(sha=repo.get_branch('master').commit.sha, recursive=True).tree:
             if element.type != 'blob':
@@ -92,12 +95,21 @@ class Blog(models.Model):
         post = Post.objects.get_or_create(blog=self, slug=slug)[0]
         post.category = self.get_or_create_category_from_filepath(filepath)
         post.published_at = datetime.now() if filepath.startswith('public/') else None
-        print(f'Published at {post.published_at}')
         post.filepath = filepath
         post.title = post.slug.replace('-', ' ').title()
         post.content_md = content
         post.save()
-        print(f'Published at {post.published_at}')
+
+        print('Parsing and uploading related files')
+
+        renderer = SyncRenderer(blog=self)
+
+        to_html = misaka.Markdown(SyncRenderer(blog=self))
+
+        to_html(post.content_md)
+
+        print(renderer.extracted_files)
+
         return post
 
     def get_or_create_category_from_filepath(self, filepath):
@@ -113,6 +125,9 @@ class Blog(models.Model):
             category = self.category_set.first()
 
         return category
+
+    def get_github_repo(self):
+        return self.owner.get_github_user().get_repo(self.slug)
 
 
 class CategoryManager(models.Manager):
@@ -187,3 +202,14 @@ class Post(models.Model):
             'post_slug': self.slug
         })
 
+
+class File(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    repo_path = models.CharField(max_length=255)
+    url = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    alt = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
