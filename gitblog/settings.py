@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'users',
     'blogs',
     'pages',
-
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -150,7 +150,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+AWS_STORAGE_BUCKET_NAME = 'gitblog-static-files'
+USER_FILES_S3_BUCKET = 'gitblog-user-files'
+
+# aws settings
+AWS_DEFAULT_ACL = 'public-read'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+# AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+STATIC_ROOT = BASE_DIR / 'static'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -161,4 +173,3 @@ GITHUB_CLIENT_ID = os.getenv('GITHUB_CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.getenv('GITHUB_CLIENT_SECRET')
 SELF_GITHUB_CLIENT_TOKEN = os.getenv('SELF_GITHUB_CLIENT_TOKEN')
 
-USER_FILES_S3_BUCKET = 'gitblog-user-files'

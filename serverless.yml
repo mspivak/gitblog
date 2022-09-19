@@ -26,6 +26,7 @@ plugins:
   - serverless-python-requirements
   - serverless-wsgi
   - serverless-domain-manager
+
 custom:
   pythonRequirements:
     dockerizePip: true
