@@ -4,7 +4,6 @@ frameworkVersion: '2 || 3'
 provider:
   name: aws
   runtime: python3.8
-  lambdaHashingVersion: '20201221'
   environment:
     DB_HOST: ${ssm:/Gitblog/Prod/Db/Host}
     DB_PORT: ${ssm:/Gitblog/Prod/Db/Host}
@@ -14,7 +13,6 @@ provider:
 
 
 functions:
-
   DjangoHandler:
     handler: wsgi_handler.handler
     timeout: 29

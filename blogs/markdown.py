@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import urllib.request
-import houdini
+import html
 import misaka
 import boto3
 from pygments import highlight
@@ -30,7 +30,7 @@ class GitblogRenderer(misaka.HtmlRenderer):
             formatter = HtmlFormatter()
             return highlight(text, lexer, formatter)
 
-        return '\n<pre><code>{}</code></pre>\n'.format(houdini.escape_html(text.strip()))
+        return '\n<pre><code>{}</code></pre>\n'.format(html.escape(text.strip()))
 
     def image(self, raw_url, title='', alt=''):
 
