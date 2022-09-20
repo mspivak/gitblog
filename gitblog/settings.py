@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-)m!lb23kalr534g-1d62o9v+f+-*#^0&nroo$gp&8&ux-8n9$2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DOMAIN = 'c798-45-224-21-52.sa.ngrok.io'
+DOMAIN = 'gitblog.link'
 
 ALLOWED_HOSTS = [
     'localhost',
