@@ -4,7 +4,11 @@
         <a href="{{ post.get_absolute_url }}">{{ post.title }}</a><br>
         <small>
             in <a href="{{ post.category.get_relative_url }}">{{ post.category.name }}</a>
-            • {{ post.created_at }} • <em>Draft</em>
+            {% if post.published_at %} }}
+                • {{ post.published_at }}
+            {% else %}
+                • <em>Draft</em>
+            {% endif %}
         </small>
     </li>
     {% endfor %}
