@@ -4,33 +4,11 @@ Gitblog publishes your markdown files as blog posts nice and easy.
 
 ## Getting started
 
-1. Clone your Gitblog repo[^1]
+1. Clone your Gitblog repo
 
     ```console
     $ git clone git@github.com:{owner}/{repo_slug}.git
     ```
-   
-   ~~double tildes~~
-
-   __bold__
-
-   ==highlight==
-
-   <u>underlined?</u>
-
-   <div style="color: red">you can use HTML</div>
-   
-   <!-- Comments show up as HTML comments, i.e. not rendered -->
-
-   > Beautiful quotes!
-   > 
-   > – Right?
-
-   superscript ( x^2 )
-
-   ![title](sealion.png "See Lion!")
-
-   [^1]: Footnotes work!
 
 
 2. Create your first post as a sketch
