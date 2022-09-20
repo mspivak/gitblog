@@ -4,13 +4,13 @@ frameworkVersion: '2 || 3'
 provider:
   name: aws
   runtime: python3.8
+  region: us-west-2
   environment:
     DB_HOST: ${ssm:/Gitblog/Prod/Db/Host}
-    DB_PORT: ${ssm:/Gitblog/Prod/Db/Host}
-    DB_USER: ${ssm:/Gitblog/Prod/Db/Host}
-    DB_PASSWORD: ${ssm:/Gitblog/Prod/Db/Host}
-    DB_NAME: ${ssm:/Gitblog/Prod/Db/Host}
-
+    DB_PORT: ${ssm:/Gitblog/Prod/Db/Port}
+    DB_USER: ${ssm:/Gitblog/Prod/Db/User}
+    DB_PASSWORD: ${ssm:/Gitblog/Prod/Db/Password}
+    DB_NAME: ${ssm:/Gitblog/Prod/Db/Name}
 
 functions:
   DjangoHandler:
