@@ -11,7 +11,7 @@ from gh.models import GithubToken
 class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    email = models.EmailField(_("email address"), blank=True, unique=True)
+    email = models.EmailField(_("email address"), null=True, blank=True, unique=True)
     first_name = None
     last_name = None
     name = models.CharField(max_length=255, blank=True)
