@@ -45,11 +45,7 @@ def new(request):
             return redirect(blog.post_set.first().get_absolute_url())
     else:
         form = NewBlogForm()
-        repos = request.user.get_github_user().get_repos()
-
-        print([repo.full_name for repo in repos])
-
-        return render(request, 'gh/new.html', context={'form': form, 'repos': repos})
+        return render(request, 'gh/new.html', context={'form': form})
 
 
 def callback(request):
