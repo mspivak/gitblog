@@ -40,9 +40,12 @@ class Blog(models.Model):
         try:
             repo = github_user.get_repo(self.name)
         except UnknownObjectException:
+
+            blog_url = f'https://{settings.DOMAIN}{self.get_absolute_url()}'
+
             repo = github_user.create_repo(
                 self.slug,
-                homepage=f'https://{settings.DOMAIN}{self.get_absolute_url()}',
+                homepage=blog_url,
                 private=True,
                 auto_init=False,
                 has_issues=False,
@@ -57,7 +60,12 @@ class Blog(models.Model):
             repo.create_file(
                 path='README.md',
                 message='Initial commit',
-                content=first_post_md.format(owner=self.owner.username, repo_slug=self.slug)
+                content=first_post_md.format(
+                    owner=self.owner.username,
+                    repo_slug=self.slug,
+                    blog_name=self.name,
+                    blog_url=blog_url
+                )
             )
 
         existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == self.hook_url), None)
