@@ -17,7 +17,7 @@ sync those changes with your new blog which new lives at {blog_url}.
       
    Using HTTPS:
    ```console
-   $ git clone https://github.com/mspivak/gitblog.git
+   $ git clone https://github.com/{owner}/{repo_slug}.git
    ```
 
    Or if you have your SSH keys set up:
@@ -54,16 +54,32 @@ sync those changes with your new blog which new lives at {blog_url}.
     Please report any issues or feed back on https://github.com/mspivak/gitblog/issues
 
 
-### Publish/Unpublish
+## Publish/Unpublish
 
 All `.md` files on your repo will be treated as separate blog posts. Their name will be turned into a title so 
-`my-new-article.md`, `my_new_article.md` and `My New Article.md` will all become 
+`my-new-article.md`, `my_new_article.md` and `My New Article.md` will all become My New Article. 
+
+Files on the root `public` directory will be published automatically, those elsewhere will only be readable by you.
 
 
-###
-| Syntax       | Description  |     Test Text |
-|:-------------|:------------:|--------------:|
-| Header       |    Title     |   Here's this |
-| Paragraph    |     Text     |      And more |
+## Syntax
 
+Most markdown syntax is available, a little demo:
+
+You can empasize with *italics* or **bold** using stars.
+
+To add images, just  
+
+You can use regular HTML:
+
+<a href="https://gitblog.link" target="_blank" style="color: red"><strong>Bold red link</strong></a>
+
+You can use tables
+```
+| Item       | Quantity  |    Price |
+|:-----------|:---------:|---------:|
+| Pencil     | 3         | $0.50    |
+| Rubber     | 1         | $0.25    |
+| Notebook   | 2         | $2.00    |
+```
 
