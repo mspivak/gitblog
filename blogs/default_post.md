@@ -16,14 +16,16 @@ sync those changes with your new blog which new lives at {blog_url}.
 1. Clone your Gitblog repo
       
    Using HTTPS:
+
    ```console
    $ git clone https://github.com/{owner}/{repo_slug}.git
    ```
 
    Or if you have your SSH keys set up:
+
    ```console
-   $ git clone git@github.com:{owner}/{repo_slug}.git
-   ```
+      $ git clone git@github.com:{owner}/{repo_slug}.git
+      ```
 
 
 2. Create your first post as a sketch
@@ -35,7 +37,7 @@ sync those changes with your new blog which new lives at {blog_url}.
     $ git push
     ```
     
-    At this point, your post is visible only to you on https://gitblog.link/{owner}/{repo_slug}/hello-world.
+    At this point, your post is visible only to you on https://gitblog.link/{owner}/{repo_slug}/posts/hello-world.
 
 
 3. Publish it
@@ -61,25 +63,32 @@ All `.md` files on your repo will be treated as separate blog posts. Their name 
 
 Files on the root `public` directory will be published automatically, those elsewhere will only be readable by you.
 
+## Categories
+
+Moving a file to `public/{tech-articles}/my-new-article.md` will create the **Tech Articles** category on your blog
+and group those on .
+
+## Images
+
+```markdown
+![Alt text](path/image.png "Title")
+```
+
+The path is relative to your repos root. 
+So you can create an `images` directory to place all your images there, but this is not mandatory.
+Images includded using this method will be copied to a Gitblog server. If you rather host them yourself, use external links.
 
 ## Syntax
 
 Most markdown syntax is available, a little demo:
 
-You can empasize with *italics* or **bold** using stars.
+- You can empasize with *italics* or **bold** using stars.
+- Regular HTML works: <a href="https://gitblog.link" target="_blank" style="color: red"><strong>Bold red link</strong></a>
+- You can use tables:
 
-To add images, just  
-
-You can use regular HTML:
-
-<a href="https://gitblog.link" target="_blank" style="color: red"><strong>Bold red link</strong></a>
-
-You can use tables
-```
-| Item       | Quantity  |    Price |
-|:-----------|:---------:|---------:|
-| Pencil     | 3         | $0.50    |
-| Rubber     | 1         | $0.25    |
-| Notebook   | 2         | $2.00    |
-```
+   | Item       | Quantity  |    Price |
+   |:-----------|:---------:|---------:|
+   | Pencil     | 3         | $0.50    |
+   | Rubber     | 1         | $0.25    |
+   | Notebook   | 2         | $2.00    |
 
