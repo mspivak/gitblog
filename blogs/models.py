@@ -87,7 +87,12 @@ class Blog(models.Model):
     def sync(self):
         repo = self.get_github_repo()
 
-        for element in repo.get_git_tree(sha=repo.get_branch('master').commit.sha, recursive=True).tree:
+        repo_tree = repo.get_git_tree(
+            sha=repo.get_branch('master').commit.sha,
+            recursive=True
+        ).tree
+
+        for element in repo_tree:
             if element.type != 'blob':
                 continue
             filepath = element.path
@@ -96,6 +101,11 @@ class Blog(models.Model):
                     filepath=filepath,
                     content=repo.get_contents(filepath).decoded_content.decode('utf-8')
                 )
+
+        for post in self.post_set:
+            if post.filepath not in [element.path for element in repo_tree]:
+                print(f'deletting {post}')
+                post.delete()
 
     def create_or_update_from_file(self, filepath, content):
         print(f'Working on {filepath}')
