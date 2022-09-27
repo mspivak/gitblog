@@ -150,17 +150,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-AWS_STORAGE_BUCKET_NAME = 'gitblog-static-files'
-USER_FILES_S3_BUCKET = 'gitblog-user-files'
+AWS_USER_FILES_BUCKET_NAME = 'gitblog-user-files'
 
-# aws settings
+AWS_STORAGE_BUCKET_NAME = 'gitblog-static-files'
 AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
 STATIC_ROOT = BASE_DIR / 'static'
 
 

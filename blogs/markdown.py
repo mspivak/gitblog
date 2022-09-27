@@ -68,7 +68,7 @@ class SyncRenderer(GitblogRenderer):
             object_key = f'{self.blog.owner.username}/{self.blog.slug}/{raw_url}'
 
             file, created = self.blog.file_set.get_or_create(repo_path=raw_url, defaults={
-                'url': f'https://{settings.USER_FILES_S3_BUCKET}.s3.amazonaws.com/{object_key}',
+                'url': f'https://{settings.AWS_USER_FILES_BUCKET_NAME}.s3.amazonaws.com/{object_key}',
                 'alt': alt,
                 'title': title
             })
@@ -85,10 +85,10 @@ class SyncRenderer(GitblogRenderer):
                     with urllib.request.urlopen(github_file.download_url) as raw_file:
                         content = raw_file.read()
 
-                print(f'Uploading {file} from to s3://{settings.USER_FILES_S3_BUCKET}/{object_key}')
+                print(f'Uploading {file} from to s3://{settings.AWS_USER_FILES_BUCKET_NAME}/{object_key}')
                 boto3.client('s3').put_object(
                     Body=content,
-                    Bucket=settings.USER_FILES_S3_BUCKET,
+                    Bucket=settings.AWS_USER_FILES_BUCKET_NAME,
                     Key=object_key
                 )
 
