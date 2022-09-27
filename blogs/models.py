@@ -102,7 +102,7 @@ class Blog(models.Model):
                     content=repo.get_contents(filepath).decoded_content.decode('utf-8')
                 )
 
-        for post in self.post_set:
+        for post in self.post_set.all():
             if post.filepath not in [element.path for element in repo_tree]:
                 print(f'deletting {post}')
                 post.delete()
