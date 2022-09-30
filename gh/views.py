@@ -32,14 +32,21 @@ def new(request):
         form = NewBlogForm(request.POST)
         if form.is_valid():
             blog_name = form.cleaned_data['name']
-            blog = Blog.objects.create(
-                owner=request.user,
-                name=blog_name,
-                slug=slugify(blog_name)
-            )
-            blog.category_set.create(
-                name='Posts', slug='posts'
-            )
+
+            blog = Blog.objects.filter(owner=request.user, name=blog_name).get()
+
+            if not blog:
+                blog = Blog.objects.create(
+                    owner=request.user,
+                    name=blog_name,
+                    slug=slugify(blog_name)
+                )
+
+            if len(blog.category_set):
+                blog.category_set.create(
+                    name='Posts', slug='posts'
+                )
+
             blog.create_on_source()
             blog.save()
             return redirect(blog.post_set.first().get_absolute_url())
@@ -61,7 +68,6 @@ def callback(request):
     token = github_app.get_access_token(code)
 
     if not token.token:
-        # raise Exception(f'Code is invalid or expired, please go to {login_url}')
         return HttpResponseRedirect(redirect_to=login_url)
 
     print(f'Got token {token.token}')
