@@ -37,7 +37,7 @@ sync those changes with your new blog which new lives at {blog_url}.
     $ git push
     ```
     
-    At this point, your post is visible only to you on https://gitblog.link/{owner}/{repo_slug}/posts/hello-world.
+    At this point, your post is visible only to you on https://gitblog.link/blogs/{owner}/{repo_slug}/posts/hello-world.
 
 
 3. Publish it
