@@ -101,7 +101,7 @@ class SyncRenderer(GitblogRenderer):
             return super().image(raw_url, title, alt)
 
 
-def md_to_html_and_css(post) -> Tuple[str, str]:
+def md_to_html_and_css(post) -> Tuple[str, Tuple[str, str]]:
 
     renderer = GitblogRenderer(blog=post.blog)
 
@@ -109,4 +109,5 @@ def md_to_html_and_css(post) -> Tuple[str, str]:
                                                     'underline', 'highlight', 'quote', 'superscript',
                                                     'math', 'math-explicit', ))
 
-    return to_html(post.content_md), HtmlFormatter(style='solarized-dark').get_style_defs('.highlight')
+    return to_html(post.content_md), \
+           (HtmlFormatter(style='solarized-light').get_style_defs('html:not(.dark) .highlight'), HtmlFormatter(style='solarized-dark').get_style_defs('html.dark .highlight'), )

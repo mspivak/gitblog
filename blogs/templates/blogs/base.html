@@ -2,14 +2,9 @@
 
 {% block extrahead %}
     <script type="text/javascript">
-
         function updateTheme() {
-            // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-            console.log(localStorage.theme)
-
             btnDark = document.getElementById('btn-mode-dark');
             btnLight = document.getElementById('btn-mode-light');
-
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
               document.documentElement.classList.add('dark');
             } else {
