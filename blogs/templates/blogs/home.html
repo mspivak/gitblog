@@ -8,7 +8,7 @@
         {% include 'blogs/partials/post_list.html' with posts=posts %}
 
         {% if not posts %}
-            Looks like {{ user }} has no posts yet.
+            Looks like {{ blog_owner }} has no posts yet.
         {% endif %}
 
     </article>

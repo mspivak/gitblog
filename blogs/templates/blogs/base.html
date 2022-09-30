@@ -20,7 +20,7 @@
 
     {% if user.is_authenticated %}
         <nav class="p-5 border-teal-500 bg-teal-700 flex items-center">
-            <a class="dark:text-white text-2xl" href="/dashboard">Gitblog</a>
+            <a class="dark:text-white text-2xl" href="/">Gitblog</a>
             <ul class="grow flex justify-end">
                 <li class="mx-5"><a href="{% url 'admin_blogs' %}" class="dark:text-gray-200">My Blogs</a></li>
                 <li class="mx-5"><a href="" class="dark:text-gray-200">{{ user.name }}</a></li>
