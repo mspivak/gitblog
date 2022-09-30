@@ -42,7 +42,7 @@ def new(request):
                     slug=slugify(blog_name)
                 )
 
-            if len(blog.category_set):
+            if not blog.category_set.count():
                 blog.category_set.create(
                     name='Posts', slug='posts'
                 )

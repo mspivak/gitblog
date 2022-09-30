@@ -2,7 +2,7 @@ from datetime import datetime
 
 import misaka
 import uuid
-from github import UnknownObjectException
+from github.GithubException import UnknownObjectException
 
 from django.conf import settings
 from django.db import models
