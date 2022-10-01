@@ -25,7 +25,7 @@ sync those changes with your new blog which new lives at {blog_url}.
 
    ```console
       $ git clone git@github.com:{owner}/{repo_slug}.git
-      ```
+   ```
 
 
 2. Create your first post as a sketch
