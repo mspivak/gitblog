@@ -88,7 +88,7 @@ class Blog(models.Model):
         repo = self.get_github_repo()
 
         repo_tree = repo.get_git_tree(
-            sha=repo.get_branch('master').commit.sha,
+            sha=repo.get_branch(repo.default_branch).commit.sha,
             recursive=True
         ).tree
 
