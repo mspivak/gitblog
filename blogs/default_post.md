@@ -65,7 +65,7 @@ Files on the root `public` directory will be published automatically, those else
 
 ## Categories
 
-Moving a file to `public/{tech-articles}/my-new-article.md` will create the **Tech Articles** category on your blog
+Moving a file to `public/tech-articles/my-new-article.md` will create the **Tech Articles** category on your blog
 and group those on .
 
 ## Images
