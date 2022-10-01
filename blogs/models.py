@@ -38,7 +38,7 @@ class Blog(models.Model):
         github_user = self.owner.get_github_user()
 
         try:
-            repo = github_user.get_repo(self.name)
+            repo = github_user.get_repo(self.slug)
         except UnknownObjectException:
 
             blog_url = f'https://{settings.DOMAIN}{self.get_absolute_url()}'
