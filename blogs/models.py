@@ -3,6 +3,7 @@ from datetime import datetime
 import misaka
 import uuid
 from github.GithubException import UnknownObjectException
+from slugify import slugify
 
 from django.conf import settings
 from django.db import models
@@ -109,7 +110,7 @@ class Blog(models.Model):
 
     def create_or_update_from_file(self, filepath, content):
         print(f'Working on {filepath}')
-        slug = filepath.split('/')[-1].lower()[:-3]
+        slug = slugify(filepath.split('/')[-1].lower()[:-3])
         post = Post.objects.get_or_create(blog=self, slug=slug)[0]
         post.category = self.get_or_create_category_from_filepath(filepath)
         post.published_at = datetime.now() if filepath.startswith('public/') else None
