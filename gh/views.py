@@ -33,9 +33,9 @@ def new(request):
         if form.is_valid():
             blog_name = form.cleaned_data['name']
 
-            blog = Blog.objects.filter(owner=request.user, name=blog_name).get()
-
-            if not blog:
+            try:
+                blog = Blog.objects.filter(owner=request.user, name=blog_name).get()
+            except Blog.DoesNotExist:
                 blog = Blog.objects.create(
                     owner=request.user,
                     name=blog_name,
