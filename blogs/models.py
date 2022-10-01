@@ -60,12 +60,12 @@ class Blog(models.Model):
             repo.create_file(
                 path='README.md',
                 message='Initial commit',
-                content=first_post_md.format(
-                    owner=self.owner.username,
-                    repo_slug=self.slug,
-                    blog_name=self.name,
-                    blog_url=blog_url
-                )
+                content=first_post_md.format_map({
+                    'owner': self.owner.username,
+                    'repo_slug': self.slug,
+                    'blog_name': self.name,
+                    'blog_url': blog_url
+                })
             )
 
         existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == self.hook_url), None)
