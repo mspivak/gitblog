@@ -104,11 +104,10 @@ class Blog(models.Model):
                 )
 
         print('Looking for deleted posts')
-        print('paths', [element.path for element in repo_tree])
         for post in self.post_set.all():
             print(post.filepath)
             if post.filepath not in [element.path for element in repo_tree]:
-                print(f'deletting {post}')
+                print(f'- Deletting {post}')
                 post.delete()
 
     def create_or_update_from_file(self, filepath, content):
@@ -126,7 +125,7 @@ class Blog(models.Model):
         renderer = SyncRenderer(blog=self)
         to_html = misaka.Markdown(SyncRenderer(blog=self))
         to_html(post.content_md)
-        print(f'Extracted files: {renderer.extracted_files}')
+        print(f'- Extracted files: {renderer.extracted_files}')
 
         return post
 
