@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.http import HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 from .markdown import md_to_html_and_css
@@ -71,6 +71,9 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
 
 def admin_blogs(request):
 
-    return render(request, 'blogs/admin_blogs.html', context={
-        'blogs': request.user.blog_set.all()
-    })
+    blogs = request.user.blog_set.all()
+
+    if not blogs.count():
+        return redirect('github_new')
+
+    return render(request, 'blogs/admin_blogs.html', context={'blogs': blogs})

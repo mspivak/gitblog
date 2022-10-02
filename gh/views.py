@@ -92,7 +92,7 @@ def callback(request):
 
     login(request, user)
 
-    return redirect('github_new')
+    return redirect('admin_blogs')
 
 
 @csrf_exempt
@@ -115,6 +115,8 @@ def hook(request, username, repo_slug):
             content=repo.get_contents(filepath).decoded_content.decode('utf-8')
         )
 
-    # TODO: Implement 'removed'
+    for filepath in payload['commits']['removed']:
+        print(f'Deletting post for {filepath}')
+        blog.post_set.filter(filepath=filepath).delete()
 
     return HttpResponse(status=204)
