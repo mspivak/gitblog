@@ -14,9 +14,9 @@ def blog_home(request, username, blog_slug):
     categories = blog.category_set.all()
 
     if request.user.is_authenticated:
-        posts = blog.post_set.filter(Q(published_at__isnull=False) | Q(blog__owner=request.user), blog=blog)
+        posts = blog.post_set.filter(Q(published_at__isnull=False) | Q(blog__owner=request.user))
     else:
-        posts = blog.post_set.filter(published_at__isnull=False, blog=blog)
+        posts = blog.post_set.filter(published_at__isnull=False)
 
     return render(request, 'blogs/home.html', context={
         'blog_owner': blog_owner,
@@ -31,7 +31,11 @@ def blog_category(request, username, blog_slug, category_slug):
     blog = Blog.objects.get(owner=blog_owner, slug=blog_slug)
     categories = blog.category_set.all()
     category = Category.objects.get(blog=blog, slug=category_slug)
-    posts = category.post_set.filter(Q(published_at__not=None) | Q(owner=request.user))
+
+    if request.user.is_authenticated:
+        posts = category.post_set.filter(Q(published_at__isnull=False) | Q(blog__owner=request.user))
+    else:
+        posts = category.post_set.filter(Q(published_at__isnull=False))
 
     return render(request, 'blogs/category.html', context={
         'blog_owner': blog_owner,
