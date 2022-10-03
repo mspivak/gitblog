@@ -13,12 +13,12 @@ from github import Github
 from .forms import NewBlogForm
 from blogs.models import Blog
 
-github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
 
 User = get_user_model()
 
 
 def get_github_login_url():
+    github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
     return github_app.get_login_url() + '&scope=repo user:email'
 
 
@@ -56,6 +56,9 @@ def new(request):
 
 
 def callback(request):
+
+    github_app = Github().get_oauth_application(settings.GITHUB_CLIENT_ID, settings.GITHUB_CLIENT_SECRET)
+
     code = request.GET.get('code')
 
     login_url = get_github_login_url()
