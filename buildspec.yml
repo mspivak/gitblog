@@ -1,5 +1,7 @@
-environment_variables:
-  plaintext:
+version: 0.2
+
+env:
+  variables:
     DJANGO_SETTINGS_MODULE: gitblog.settings
 
 phases:
