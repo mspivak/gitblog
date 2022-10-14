@@ -1,0 +1,24 @@
+environment_variables:
+  plaintext:
+    DJANGO_SETTINGS_MODULE: gitblog.settings
+
+phases:
+  install:
+    commands:
+      - apt-get update -y
+      - apt-get install -y nodejs
+      - node --version
+      - npm --version
+  pre_build:
+    commands:
+      - pip install -r requirements.txt
+      - python manage.py tailwind build
+      - python manage.py collectstatic --noinput
+      - npm install serverless
+      - serverless deploy
+#  build:
+#    commands:
+#
+  post_build:
+    commands:
+      - echo Build completed on `date`
