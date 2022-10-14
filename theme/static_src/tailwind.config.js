@@ -43,7 +43,16 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            typography: {
+                DEFAULT: {
+                    css: {
+                        'code::before': false,
+                        'code::after': false,
+                    },
+                }
+            }
+        },
     },
     plugins: [
         /**

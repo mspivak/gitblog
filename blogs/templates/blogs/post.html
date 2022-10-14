@@ -5,6 +5,9 @@
     <style>
         {{ content_css.0 }}
         {{ content_css.1 }}
+        .prose .highlight {
+            background: none !important;
+        }
         pre .gp {
           user-select: none;
           -webkit-user-select: none;
@@ -19,7 +22,7 @@
     </div>
     {% endif %}
 
-    <article class="container mx-auto prose xl:prose-xl dark:prose-invert font-serif mt-10">
+    <article class="prose md:prose-xl dark:prose-invert font-serif mx-5 sm:mx-10 md:mx-auto mt-10 prose-a:text-teal-600 prose-a:no-underline">
 
         {{ content|safe }}
 

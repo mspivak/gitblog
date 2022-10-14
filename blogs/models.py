@@ -26,6 +26,9 @@ class Blog(models.Model):
             models.UniqueConstraint(fields=['owner', 'slug'], name='unique_owner_slug'),
         ]
 
+    def __str__(self):
+        return f'Blog #{self.id} - {self.owner.username}/{self.slug}'
+
     def get_absolute_url(self):
         return reverse('blog_home', kwargs={'username': self.owner.username, 'blog_slug': self.slug})
 
@@ -153,6 +156,7 @@ class CategoryManager(models.Manager):
 
 
 class Category(models.Model):
+
     objects = CategoryManager
     id = models.AutoField(primary_key=True)
     slug = models.SlugField(max_length=255)
@@ -162,6 +166,7 @@ class Category(models.Model):
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
 
     class Meta:
+        verbose_name_plural = 'Categories'
         constraints = [
             models.UniqueConstraint(fields=['blog', 'slug'], name='unique_blog_category_slug'),
         ]
