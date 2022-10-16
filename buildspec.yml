@@ -17,7 +17,10 @@ phases:
       - python manage.py tailwind install
       - python manage.py tailwind build
       - python manage.py collectstatic --noinput
-      - npm install -g serverless
+      - npm install --location=global serverless
+      - serverless plugin install --name=serverless-python-requirements
+      - serverless plugin install --name=serverless-wsgi
+      - serverless plugin install --name=serverless-domain-manager
       - serverless deploy
 #  build:
 #    commands:
