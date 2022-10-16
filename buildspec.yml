@@ -17,7 +17,7 @@ phases:
       - python manage.py tailwind install
       - python manage.py tailwind build
       - python manage.py collectstatic --noinput
-      - npm install serverless
+      - npm install -g serverless
       - serverless deploy
 #  build:
 #    commands:
