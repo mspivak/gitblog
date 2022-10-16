@@ -6,6 +6,8 @@ env:
 
 phases:
   install:
+    runtime-versions:
+      python: 3.8
     commands:
       - apt-get update -y
       - apt-get install -y nodejs
