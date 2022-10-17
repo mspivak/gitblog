@@ -51,10 +51,6 @@ def blog_post(request, username, blog_slug, category_slug, post_slug):
     blog = Blog.objects.get(owner=user, slug=blog_slug)
     post = Post.objects.get(blog=blog, slug=post_slug)
 
-    print(post.published_at)
-    print(request.user)
-    print(user)
-
     if not post.published_at and request.user != user:
         return HttpResponseNotFound(render(request, 'blogs/notfound.html', context={'blog': blog}))
 
