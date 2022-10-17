@@ -7,10 +7,10 @@ env:
 phases:
   install:
     runtime-versions:
-      python: 3.8
+      python: 3.9
     commands:
       - apt-get update -y
-      - apt-get install -y nodejs
+      - apt-get install -y nodejs python3.9
       - node --version
       - npm --version
   pre_build:

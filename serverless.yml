@@ -3,7 +3,7 @@ frameworkVersion: '2 || 3'
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.9
   region: us-west-2
   environment:
     DB_HOST: ${ssm:/Gitblog/Prod/Db/Host}
