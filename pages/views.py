@@ -19,7 +19,9 @@ $ git push
 
     return render(request, 'pages/home.html', context={
         'git_code_html': highlight(git_code, get_lexer_by_name('console'), HtmlFormatter()),
-        'git_code_styles': HtmlFormatter(style='solarized-dark').get_style_defs('.highlight')
+        'git_code_styles': (
+            HtmlFormatter(style='solarized-light').get_style_defs('html:not(.dark) .highlight'),
+            HtmlFormatter(style='solarized-dark').get_style_defs('html.dark .highlight'), )
     })
 
 

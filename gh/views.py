@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from github import Github
+from github.GithubException import GithubException
 
 from .forms import NewBlogForm
 from blogs.models import Blog
@@ -68,8 +69,12 @@ def callback(request):
 
     print(f'Got code {code}')
 
-    token = github_app.get_access_token(code)
+    try:
+        token = github_app.get_access_token(code)
+    except GithubException:
+        return HttpResponseRedirect(redirect_to=login_url)
 
+    # TODO: Is this necesary?
     if not token.token:
         return HttpResponseRedirect(redirect_to=login_url)
 
