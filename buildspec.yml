@@ -6,11 +6,11 @@ env:
 
 phases:
   install:
-#    runtime-versions:
-#      python: 3.9
+    runtime-versions:
+      python: 3.9
     commands:
       - apt-get update -y
-      - apt-get install -y nodejs python3.9
+      - apt-get install -y nodejs
       - node --version
       - npm --version
       - python --version
