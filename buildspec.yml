@@ -24,7 +24,7 @@ phases:
       - serverless plugin install --name=serverless-python-requirements
       - serverless plugin install --name=serverless-wsgi
       - serverless plugin install --name=serverless-domain-manager
-      - serverless deploy
+      - serverless deploy --verbose
 #  build:
 #    commands:
 #
