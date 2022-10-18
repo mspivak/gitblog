@@ -49,6 +49,7 @@ module.exports = {
                     css: {
                         'code::before': false,
                         'code::after': false,
+                        pre: false,
                     },
                 }
             }
