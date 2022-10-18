@@ -1,5 +1,22 @@
 {% extends 'pages/base.html' %}
 
+{% block extrahead %}
+    <style>
+        {{ git_code_styles.0 }}
+        {{ git_code_styles.1 }}
+        .prose .highlight,
+        .prose .highlight pre {
+            background: none !important;
+        }
+        pre .gp {
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 
     <section class="container mt-10 mx-auto prose dark:prose-invert">
@@ -19,20 +36,7 @@
             <li>Free until I figure out what's the smallest I can charge for this, maybe even forever.</li>
         </ul>
 
-        <style>
-            {{ git_code_styles.0 }}
-{#            {{ git_code_styles.1 }}#}
-            .prose .highlight,
-            .prose .highlight pre {
-                background: none !important;
-            }
-            pre .gp {
-              user-select: none;
-              -webkit-user-select: none;
-              -moz-user-select: none;
-              -ms-user-select: none;
-            }
-        </style>
+
 
         <p>Like this:</p>
 
