@@ -11,6 +11,9 @@ provider:
     DB_USER: ${ssm:/Gitblog/Prod/Db/User}
     DB_PASSWORD: ${ssm:/Gitblog/Prod/Db/Password}
     DB_NAME: ${ssm:/Gitblog/Prod/Db/Name}
+    GITHUB_CLIENT_ID: ${ssm:/Gitblog/Prod/Github/ClientId}
+    GITHUB_CLIENT_SECRET: ${ssm:/Gitblog/Prod/Github/ClientSecret}
+    SELF_GITHUB_CLIENT_TOKEN: ${ssm:/Gitblog/Prod/Github/SelfClientToken}
 
 functions:
   DjangoHandler:
