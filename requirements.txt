@@ -28,3 +28,4 @@ django-tailwind~=3.4.0
 django_browser_reload
 python-slugify
 django-storages
+beautifulsoup4

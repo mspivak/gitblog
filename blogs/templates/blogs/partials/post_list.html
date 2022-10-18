@@ -1,15 +1,23 @@
-<ul>
-    {% for post in posts %}
-    <li>
-        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a><br>
-        <small>
-            in <a href="{{ post.category.get_relative_url }}">{{ post.category.name }}</a>
-            {% if post.published_at %}
-                • {{ post.published_at }}
-            {% else %}
-                • <em>Draft</em>
-            {% endif %}
-        </small>
-    </li>
-    {% endfor %}
-</ul>
+{% for post in posts %}
+<div>
+
+    <h3 class="mb-2 leading-tight">
+        <a href="{{ post.get_absolute_url }}"
+            class="no-underline dark:text-teal-200 text-teal-700 hover:text-teal-900"
+        >
+            {{ post.title }}
+        </a>
+    </h3>
+
+    <p class="mb-1 leading-normal">{{ post.summary }}</p>
+
+    <small class="text-gray-400">
+        in <a class="text-gray-400 no-underline border-b border-gray-500" href="{{ post.category.get_relative_url }}">{{ post.category.name }}</a>
+        {% if post.published_at %}
+            • {{ post.published_at }}
+        {% else %}
+            • <em>Draft</em>
+        {% endif %}
+    </small>
+</div>
+{% endfor %}

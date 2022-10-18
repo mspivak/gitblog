@@ -4,6 +4,7 @@ import misaka
 import uuid
 from github.GithubException import UnknownObjectException
 from slugify import slugify
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 from django.db import models
@@ -127,10 +128,23 @@ class Blog(models.Model):
         print('Parsing and uploading related files')
         renderer = SyncRenderer(blog=self)
         to_html = misaka.Markdown(SyncRenderer(blog=self))
-        to_html(post.content_md)
+        content_html = to_html(post.content_md)
         print(f'- Extracted files: {renderer.extracted_files}')
 
+        post.summary = self.extract_summary_from_html(content_html)
+        post.save()
+
         return post
+
+    def extract_summary_from_html(self, html):
+
+        paragraphs = BeautifulSoup(html, features="html.parser")('p')
+
+        if len(paragraphs):
+            return paragraphs[0].get_text()
+
+        return ''
+
 
     def get_or_create_category_from_filepath(self, filepath):
         parts = filepath.split('/')
@@ -203,6 +217,7 @@ class Post(models.Model):
     id = models.AutoField(primary_key=True)
     slug = models.SlugField(max_length=255)
     title = models.CharField(max_length=255)
+    summary = models.TextField(default='')
     filepath = models.CharField(max_length=255)
     content_md = models.TextField()
     published_at = models.DateTimeField(null=True, blank=True, default=None)
