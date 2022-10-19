@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import misaka
+import secrets
 import uuid
 from github.GithubException import UnknownObjectException
 from slugify import slugify
@@ -18,6 +19,7 @@ class Blog(models.Model):
     # blog slug is the same as the GitHub repo name
     slug = models.SlugField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
+    secret = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
@@ -75,12 +77,14 @@ class Blog(models.Model):
 
         existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == self.hook_url), None)
         if not existing_hook:
+            self.secret = secrets.token_urlsafe(32),
+            self.save()
             hook = repo.create_hook(
                 name='web',
                 config={
                     'url': self.hook_url,
-                    'content_type': 'json'
-                    # 'secret': TODO: generate secret and store it on the blog table
+                    'content_type': 'json',
+                    'secret': self.secret,
                 },
                 active=True,
                 events=['push']
