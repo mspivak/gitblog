@@ -129,7 +129,7 @@ def hook(request, username, repo_slug):
         if 'X-Hub-Signature-256' not in signed_request.headers:
             return False
 
-        hash_algo, signature = signed_request.headers
+        hash_algo, signature = signed_request.headers['X-Hub-Signature-256'].split('=')
         return hmac.compare_digest(
             hmac.new(
                 secret.encode('utf-8'),
