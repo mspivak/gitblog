@@ -20,7 +20,6 @@ phases:
       - python manage.py tailwind install
       - python manage.py tailwind build
       - python manage.py collectstatic --noinput
-      - python manage.py migrate --noinput
       - npm install -g serverless
       - serverless plugin install --name=serverless-python-requirements
       - serverless plugin install --name=serverless-wsgi
@@ -31,4 +30,5 @@ phases:
 #
   post_build:
     commands:
+      - serverless wsgi manage --command "migrate"
       - echo Build completed on `date`
