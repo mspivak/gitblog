@@ -3,10 +3,18 @@ from django.conf import global_settings
 
 DEBUG = True
 
-INSTALLED_APPS = INSTALLED_APPS\
-    + [
-        'django_extensions'
-    ]
+
+ALLOWED_HOSTS = ALLOWED_HOSTS + [
+    '.ngrok.io',
+]
+
+CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS + [
+    'https://735c-139-47-116-160.eu.ngrok.io'
+]
+
+INSTALLED_APPS = INSTALLED_APPS + [
+    'django_extensions'
+]
 
 # Override production's s3 static files
 STATIC_URL = 'static/'

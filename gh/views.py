@@ -1,4 +1,5 @@
 import json
+import hmac, hashlib
 from slugify import slugify
 
 from django.conf import settings
@@ -9,7 +10,6 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from github import Github
-from github import GithubException
 
 from .forms import NewBlogForm
 from blogs.models import Blog
@@ -99,6 +99,24 @@ def callback(request):
     return redirect('admin_blogs')
 
 
+def ct_compare(a, b):
+    """
+    ** From Django source **
+    Run a constant time comparison against two strings
+    Returns true if a and b are equal.
+    a and b must both be the same length, or False is
+    returned immediately
+    """
+
+    if len(a) != len(b):
+        return False
+
+    result = 0
+    for ch_a, ch_b in zip(a, b):
+        result |= ord(ch_a) ^ ord(ch_b)
+    return result == 0
+
+
 @csrf_exempt
 def hook(request, username, repo_slug):
 
@@ -106,6 +124,24 @@ def hook(request, username, repo_slug):
 
     user = User.objects.filter(username=username).first()
     blog = Blog.objects.filter(owner=user, slug=repo_slug).first()
+
+    def verify_signature(signed_request, secret):
+        if 'X-Hub-Signature-256' not in signed_request.headers:
+            return False
+
+        hash_algo, signature = signed_request.headers
+        return hmac.compare_digest(
+            hmac.new(
+                secret.encode('utf-8'),
+                msg=signed_request.body,
+                digestmod=hashlib.sha256
+            ).hexdigest(),
+            signature
+        )
+
+    if blog.secret and not verify_signature(request, blog.secret):
+        print('ERROR: HMAC verification failed')
+        return HttpResponse(status=400)
 
     repo = user.get_github_user().get_repo(blog.slug)
 
@@ -119,8 +155,9 @@ def hook(request, username, repo_slug):
             content=repo.get_contents(filepath).decoded_content.decode('utf-8')
         )
 
-    for filepath in payload['commits']['removed']:
-        print(f'Deletting post for {filepath}')
-        blog.post_set.filter(filepath=filepath).delete()
+    for commit in payload['commits']:
+        for filepath in commit['removed']:
+            print(f'Deletting post for {filepath}')
+            blog.post_set.filter(filepath=filepath).delete()
 
     return HttpResponse(status=204)
