@@ -77,7 +77,7 @@ class Blog(models.Model):
 
         existing_hook = next((repo for repo in repo.get_hooks() if repo.config['url'] == self.hook_url), None)
         if not existing_hook:
-            self.secret = secrets.token_urlsafe(32),
+            self.secret = secrets.token_urlsafe(32)
             self.save()
             hook = repo.create_hook(
                 name='web',
