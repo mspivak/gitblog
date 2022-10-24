@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from github import Github
 
 from .forms import NewBlogForm
-from blogs.models import Blog
+from blogs.models import Blog, File
 
 
 User = get_user_model()
@@ -99,24 +99,6 @@ def callback(request):
     return redirect('admin_blogs')
 
 
-def ct_compare(a, b):
-    """
-    ** From Django source **
-    Run a constant time comparison against two strings
-    Returns true if a and b are equal.
-    a and b must both be the same length, or False is
-    returned immediately
-    """
-
-    if len(a) != len(b):
-        return False
-
-    result = 0
-    for ch_a, ch_b in zip(a, b):
-        result |= ord(ch_a) ^ ord(ch_b)
-    return result == 0
-
-
 @csrf_exempt
 def hook(request, username, repo_slug):
 
@@ -147,17 +129,24 @@ def hook(request, username, repo_slug):
 
     changes = {file
                for files in [commit['added'] + commit['modified'] for commit in payload['commits']]
-               for file in files if file.endswith('.md')}
+               for file in files}
 
     for filepath in changes:
-        blog.create_or_update_from_file(
-            filepath=filepath,
-            content=repo.get_contents(filepath).decoded_content.decode('utf-8')
-        )
+        if filepath.endswith('.md'):
+            blog.create_or_update_from_file(
+                filepath=filepath,
+                content=repo.get_contents(filepath).decoded_content.decode('utf-8')
+            )
+        else:
+            try:
+                file = File.objects.get(repo_path=filepath)
+                file.upload()
+            except File.DoesNotExist:
+                pass
 
     for commit in payload['commits']:
         for filepath in commit['removed']:
-            print(f'Deletting post for {filepath}')
+            print(f'Deleting post for {filepath}')
             blog.post_set.filter(filepath=filepath).delete()
 
     return HttpResponse(status=204)

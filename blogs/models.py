@@ -1,8 +1,8 @@
-from datetime import datetime
-
+import boto3
 import misaka
 import secrets
 import uuid
+import urllib.request
 from github.GithubException import UnknownObjectException
 from slugify import slugify
 from bs4 import BeautifulSoup
@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from .markdown import SyncRenderer
 
@@ -123,7 +124,7 @@ class Blog(models.Model):
         slug = slugify(filepath.split('/')[-1].lower()[:-3])
         post = Post.objects.get_or_create(blog=self, slug=slug)[0]
         post.category = self.get_or_create_category_from_filepath(filepath)
-        post.published_at = datetime.now() if filepath.startswith('public/') else None
+        post.published_at = timezone.now() if filepath.startswith('public/') else None
         post.filepath = filepath
         post.title = post.slug.replace('-', ' ').title()
         post.content_md = content
@@ -131,9 +132,12 @@ class Blog(models.Model):
 
         print('Parsing and uploading related files')
         renderer = SyncRenderer(blog=self)
-        to_html = misaka.Markdown(SyncRenderer(blog=self))
+        to_html = misaka.Markdown(renderer)
         content_html = to_html(post.content_md)
         print(f'- Extracted files: {renderer.extracted_files}')
+
+        for file in renderer.extracted_files:
+            file.upload()
 
         post.summary = self.extract_summary_from_html(content_html)
         post.save()
@@ -148,7 +152,6 @@ class Blog(models.Model):
             return paragraphs[0].get_text()
 
         return ''
-
 
     def get_or_create_category_from_filepath(self, filepath):
         parts = filepath.split('/')
@@ -254,3 +257,33 @@ class File(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.url =  f'https://{settings.AWS_USER_FILES_BUCKET_NAME}.s3.amazonaws.com/{self.object_key}'
+
+    @property
+    def object_key(self):
+        return f'{self.blog.owner.username}/{self.blog.slug}/{self.repo_path}'
+
+    def upload(self):
+
+        print(f'Downloading {self} from Github: {self.blog} {self.repo_path}')
+
+        github_file = self.blog.get_github_repo().get_contents(f'/{self.repo_path}')
+
+        print('never getting here')
+
+        if github_file.content:
+            content = github_file.decoded_content
+        else:
+            # File size is over 1MB, do a second request to get it
+            with urllib.request.urlopen(github_file.download_url) as raw_file:
+                content = raw_file.read()
+
+        print(f'Uploading {self} from to s3://{settings.AWS_USER_FILES_BUCKET_NAME}/{self.object_key}')
+        boto3.client('s3').put_object(
+            Body=content,
+            Bucket=settings.AWS_USER_FILES_BUCKET_NAME,
+            Key=self.object_key
+        )
