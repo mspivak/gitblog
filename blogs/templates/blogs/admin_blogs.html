@@ -7,10 +7,10 @@
 
         <div class="flex items-center place-content-between">
 
-            <h1 class="mb-10 text-3xl text-teal-100">My Blogs</h1>
+            <h1 class="mb-10 text-3xl dark:text-teal-100">My Blogs</h1>
 
             <a href="{% url 'github_new' %}"
-               class="inline-block my-8 border border-teal-500 text-gray-100 rounded-full no-underline hover:bg-teal-500/10 py-5 px-10">
+               class="inline-block my-8 border border-teal-500 text-teal-600 dark:text-gray-100 rounded-xl no-underline hover:bg-teal-500/10 py-3 px-8">
                 New Blog
             </a>
         </div>
@@ -18,7 +18,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
             {% for blog in blogs %}
             <a href="{% url 'blog_home' username=blog.owner.username blog_slug=blog.slug %}"
-                    class="border p-5 rounded-xl dark:text-gray-100 dark:border-gray-200/25 hover:bg-teal-500/10 cursor-pointer">
+                    class="border p-5 rounded-xl dark:text-gray-100 dark:border-gray-200/25 hover:bg-teal-500/10 hover:border-teal-500 cursor-pointer">
                 <div class="text-bold">{{ blog.name }}</div>
                 <div class="text-teal-500">
                     <code>{{ blog.owner.username }}/{{ blog.slug }}</code>

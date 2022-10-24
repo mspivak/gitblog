@@ -26,5 +26,8 @@ $ git push
 
 
 def auth_logout(request):
+
+    user = request.user
+
     logout(request)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(user.blog_set.first().get_absolute_url())
