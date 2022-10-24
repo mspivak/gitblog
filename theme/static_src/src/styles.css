@@ -14,10 +14,10 @@
     .prose h6 {
         font-family: 'Source Serif Pro', serif;
     }
-    .prose h1 {
+    .prose:not(.home) h1 {
         padding-top: 10rem;
     }
-    .prose h2 {
+    .prose:not(.home) h2 {
         padding-top: 4rem;
     }
 

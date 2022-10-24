@@ -19,13 +19,12 @@
 
 {% block body %}
 
-    <section class="container mt-10 mx-auto prose dark:prose-invert">
-        <h1>Gitblog</h1>
+    <section class="home container mx-auto prose dark:prose-invert p-4">
 
-        <h2>
-            Blog using git and markdown. <br>
-        </h2>
-        <em>A blogging platform from devs to devs.</em>
+        <h1 class="pt-6">Gitblog</h1>
+
+        <h2 class="mb-0">Blog using git and markdown.</h2>
+        <em class="">A blogging platform from devs to devs.</em>
 
         <ul>
             <li>We create a repo on your own Github account.</li>
@@ -42,10 +41,12 @@
 
         {{ git_code_html | safe }}
 
-        <a href="{% url 'github_login' %}"
-           class="inline-block my-8 border-2 border-teal-500 rounded-full no-underline hover:bg-teal-500 hover:bg-teal-500/25 py-5 px-10">
-            Login with Github
-        </a>
+        <div class="text-center">
+            <a href="{% url 'github_login' %}"
+               class="inline-block my-8 border-2 border-teal-500 rounded-full no-underline hover:bg-teal-500 hover:bg-teal-500/25 py-5 px-10">
+                Start with Github
+            </a>
+        </div>
 
     </section>
 
