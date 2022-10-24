@@ -3,6 +3,7 @@ from django.conf import global_settings
 
 DEBUG = True
 
+DOMAIN = 'localhost:8000'
 
 ALLOWED_HOSTS = ALLOWED_HOSTS + [
     '.ngrok.io',

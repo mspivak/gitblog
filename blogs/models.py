@@ -2,7 +2,7 @@ import boto3
 import misaka
 import secrets
 import uuid
-import urllib.request
+import urllib.request, urllib.parse
 from github.GithubException import UnknownObjectException
 from slugify import slugify
 from bs4 import BeautifulSoup
@@ -20,6 +20,7 @@ class Blog(models.Model):
     # blog slug is the same as the GitHub repo name
     slug = models.SlugField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
+    # Github webhook secret
     secret = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -32,6 +33,10 @@ class Blog(models.Model):
 
     def __str__(self):
         return f'Blog #{self.id} - {self.owner.username}/{self.slug}'
+
+    def save(self, **kwargs):
+        self.access_token = secrets.token_urlsafe(32)
+        super(Blog, self).save()
 
     def get_absolute_url(self):
         return reverse('blog_home', kwargs={'username': self.owner.username, 'blog_slug': self.slug})
@@ -230,6 +235,8 @@ class Post(models.Model):
     published_at = models.DateTimeField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # Public URL access token
+    access_token = models.CharField(max_length=255)
     blog = models.ForeignKey('blogs.Blog', on_delete=models.CASCADE)
     category = models.ForeignKey('blogs.Category', on_delete=models.SET_NULL, null=True)
 
@@ -245,6 +252,11 @@ class Post(models.Model):
             'category_slug': self.category.slug,
             'post_slug': self.slug
         })
+
+    def get_shareable_url(self):
+        url =  self.get_absolute_url()
+        params = urllib.parse.urlencode({'token': self.access_token})
+        return f'https://{settings.DOMAIN}{url}?{params}'
 
 
 class File(models.Model):

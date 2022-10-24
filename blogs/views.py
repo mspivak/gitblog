@@ -47,11 +47,11 @@ def blog_category(request, username, blog_slug, category_slug):
 
 
 def blog_post(request, username, blog_slug, category_slug, post_slug):
-    user = User.objects.get(username=username)
-    blog = Blog.objects.get(owner=user, slug=blog_slug)
+    owner = User.objects.get(username=username)
+    blog = Blog.objects.get(owner=owner, slug=blog_slug)
     post = Post.objects.get(blog=blog, slug=post_slug)
 
-    if not post.published_at and request.user != user:
+    if not post.published_at and request.user != owner and request.GET.get('token') != post.access_token:
         return HttpResponseNotFound(render(request, 'blogs/notfound.html', context={'blog': blog}))
 
     categories = blog.category_set.all()
