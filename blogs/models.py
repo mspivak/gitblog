@@ -289,11 +289,7 @@ class File(models.Model):
     def upload(self):
 
         print(f'Downloading {self} from Github: {self.blog} {self.repo_path}')
-
         github_file = self.blog.get_github_repo().get_contents(f'/{self.repo_path}')
-
-        print('never getting here')
-
         if github_file.content:
             content = github_file.decoded_content
         else:
