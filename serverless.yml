@@ -15,6 +15,16 @@ provider:
     GITHUB_CLIENT_SECRET: ${ssm:/Gitblog/Prod/Github/ClientSecret}
     SELF_GITHUB_CLIENT_TOKEN: ${ssm:/Gitblog/Prod/Github/SelfClientToken}
 
+  iam:
+    role: gitblog-lambdaHandler-role
+    statements:
+      - Effect: Allow
+        Resource: 'arn:aws:s3:::gitblog-user-files/*'
+        Actions:
+          - 's3:PutObject'
+          - 's3:GetObject'
+          - 'S3:DeleteObject'
+
 functions:
   DjangoHandler:
     handler: wsgi_handler.handler
@@ -51,3 +61,4 @@ custom:
 #    securityPolicy: tls_1_2
 #    route53Params:
 #      routingPolicy: latency
+
