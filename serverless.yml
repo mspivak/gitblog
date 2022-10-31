@@ -16,14 +16,15 @@ provider:
     SELF_GITHUB_CLIENT_TOKEN: ${ssm:/Gitblog/Prod/Github/SelfClientToken}
 
   iam:
-    role: gitblog-lambdaHandler-role
-    statements:
-      - Effect: Allow
-        Resource: 'arn:aws:s3:::gitblog-user-files/*'
-        Actions:
-          - 's3:PutObject'
-          - 's3:GetObject'
-          - 'S3:DeleteObject'
+    role:
+      name: gitblog-lambdaHandler-role
+      statements:
+        - Effect: Allow
+          Resource: 'arn:aws:s3:::gitblog-user-files/*'
+          Actions:
+            - 's3:PutObject'
+            - 's3:GetObject'
+            - 'S3:DeleteObject'
 
 functions:
   DjangoHandler:
