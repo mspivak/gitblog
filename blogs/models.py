@@ -35,7 +35,9 @@ class Blog(models.Model):
         return f'Blog #{self.id} - {self.owner.username}/{self.slug}'
 
     def save(self, **kwargs):
-        self.access_token = secrets.token_urlsafe(32)
+        # Updates old posts.
+        if not self.secret:
+            self.secret = secrets.token_urlsafe(32)
         super(Blog, self).save()
 
     def get_absolute_url(self):
@@ -246,7 +248,9 @@ class Post(models.Model):
         ]
 
     def save(self, **kwargs):
-        self.access_token = secrets.token_urlsafe(32)
+        # Updates old posts.
+        if not self.access_token:
+            self.access_token = secrets.token_urlsafe(32)
         super(Post, self).save()
 
     def get_absolute_url(self):
