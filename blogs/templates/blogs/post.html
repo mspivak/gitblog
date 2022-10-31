@@ -17,13 +17,18 @@
         }
     </style>
 
+
     {% if not post.published_at %}
     <div class="p-2 bg-gray-200 dark:bg-gray-900 flex items-center justify-center dark:text-white">
         <span class="text-center">
             <em>Unpublished draft.</em><br>
             {% if user.is_authenticated %}
-                <small>To publish, move this file to <code>/public</code>.</small><br>
-                <small>Share link: {{ post.get_shareable_url }}</small>
+                <small>To publish, move this file to <code>/public</code>.</small>
+                <small>
+                    <a href="{{ post.get_shareable_url }}" class="copy-to-clipboard dark:text-amber-100">
+                        Copy read-only shareable link.
+                    </a>
+                </small>
             {% else %}
                 <small>You can see this because you have a special link, it's not public for everyone.</small>
             {% endif %}
@@ -49,5 +54,36 @@
             {% endif %}
         </ul>
     </article>
+
+
+    <script>
+
+        var elements = document.getElementsByClassName('copy-to-clipboard');
+
+        for (let element of elements) {
+            element.addEventListener('click', function(event) {
+                event.preventDefault();
+                let successMessage = document.createElement('span');
+                if (element.copyToClipboardInProgress === true) {
+                    return;
+                }
+                element.copyToClipboardInProgress = true;
+                copyToClipboard(event.target.href);
+                successMessage.appendChild(document.createTextNode('Done!'));
+                successMessage.className = 'text-teal-500';
+                event.target.appendChild(successMessage);
+                setInterval(function() {
+                    element.copyToClipboardInProgress = false
+                    successMessage.remove();
+                }, 1000)
+            })
+        }
+
+        function copyToClipboard(text) {
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(text);
+        }
+
+    </script>
 
 {% endblock %}
