@@ -245,6 +245,10 @@ class Post(models.Model):
             models.UniqueConstraint(fields=['blog', 'slug'], name='unique_blog_post_slug'),
         ]
 
+    def save(self, **kwargs):
+        self.access_token = secrets.token_urlsafe(32)
+        super(Post, self).save()
+
     def get_absolute_url(self):
         return reverse('blog_post', kwargs={
             'username': self.blog.owner.username,
