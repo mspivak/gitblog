@@ -20,8 +20,9 @@ provider:
       name: gitblog-lambdaHandler-role
       statements:
         - Effect: Allow
-          Resource: 'arn:aws:s3:::gitblog-user-files/*'
-          Actions:
+          Resource:
+            - 'arn:aws:s3:::gitblog-user-files/*'
+          Action:
             - 's3:PutObject'
             - 's3:GetObject'
             - 'S3:DeleteObject'
