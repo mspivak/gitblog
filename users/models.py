@@ -14,7 +14,7 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), null=True, blank=True, unique=True)
     first_name = None
     last_name = None
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
     manager = UserManager()
 
     def __str__(self):
