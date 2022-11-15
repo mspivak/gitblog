@@ -21,5 +21,4 @@ urlpatterns = [
     path('github/', include('gh.urls')),
     path('blogs/', include('blogs.urls')),
     path('', include('pages.urls')),
-    path('test-sentry/', my_undefined_function),
 ]
